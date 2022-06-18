@@ -2,13 +2,14 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"path"
 	"strconv"
 )
 
 const (
-	programEndpoint = "programs"
+	programEndpoint          = "programs"
+	programCategoryEndpoint  = "programcategories"
+	programBroadcastEndpoint = "broadcasts"
 )
 
 type ProgramService service
@@ -61,14 +62,7 @@ type ListProgramsResponse struct {
 }
 
 func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ListProgramOptions) ([]*Program, error) {
-	r, err := addOptions(programEndpoint, opt)
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("Printing options: %v\n", opt)
-
-	req, err := s.client.NewRequest("GET", r, nil)
+	req, err := getRequest(s, programEndpoint, ctx, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -98,4 +92,27 @@ func (s *ProgramService) FindProgramByID(ctx context.Context, programID int, gen
 		return nil, err
 	}
 	return resp.Program, nil
+}
+
+type ProgramCategory struct {
+	Id   int
+	Name string
+}
+
+type ProgramCategoriesResponse struct {
+	Copyright         string             `json:"copyright"`
+	ProgramCategories []*ProgramCategory `json:"programcategories"`
+}
+
+func (s *ProgramService) ListAllProgramCategories(ctx context.Context, opt GeneralOptions) ([]*ProgramCategory, error) {
+	req, err := getRequest(s, programEndpoint, ctx, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *ProgramCategoriesResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.ProgramCategories, nil
 }
