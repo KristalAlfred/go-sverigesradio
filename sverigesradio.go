@@ -1,8 +1,13 @@
 package sverigesradio
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 const (
@@ -58,4 +63,39 @@ func NewClient(httpClient *http.Client) *Client {
 	// c.Toplist = (*&ToplistService)(&c.common)
 	// c.Traffic = (*&TrafficService)(&c.common)
 	return c
+}
+
+func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
+	if !strings.HasSuffix(c.BaseURL.Path, "/") {
+		return nil, fmt.Errorf("BaseURL must have a trailing slash, but %q does not", c.BaseURL)
+	}
+
+	fullUrl, err := c.BaseURL.Parse(urlStr)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf io.ReadWriter
+	if body != nil {
+		buf := &bytes.Buffer{}
+		enc := json.NewEncoder(buf)
+		enc.SetEscapeHTML(false)
+		err := enc.Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	req, err := http.NewRequest(method, fullUrl.String(), buf)
+	if err != nil {
+		return nil, err
+	}
+
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	req.Header.Set("Accept", "application/json")
+
+	return req, nil
 }
