@@ -82,8 +82,8 @@ type FindProgramsResponse struct {
 	Program   *Program `json:"program"`
 }
 
-func (s *ProgramService) FindProgramByID(ctx context.Context, programID int, generalOptions *GeneralOptions) (*Program, error) {
-	p := path.Join(programEndpoint, strconv.Itoa(programID))
+func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOptions *GeneralOptions) (*Program, error) {
+	p := path.Join(programEndpoint, strconv.Itoa(id))
 	r, err := addOptions(p, generalOptions)
 	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
@@ -118,4 +118,24 @@ func (s *ProgramService) ListAllProgramCategories(ctx context.Context, opt *Gene
 		return nil, err
 	}
 	return resp.ProgramCategories, nil
+}
+
+type ProgramCategoryResponse struct {
+	Copyright       string           `json:"copyright"`
+	ProgramCategory *ProgramCategory `json:"programcategory"`
+}
+
+func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt *GeneralOptions) (*ProgramCategory, error) {
+	p := path.Join(programCategoryEndpoint, strconv.Itoa(id))
+	r, err := addOptions(p, opt)
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *ProgramCategoryResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.ProgramCategory, nil
 }

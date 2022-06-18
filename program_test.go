@@ -27,12 +27,40 @@ func TestListAllPrograms(t *testing.T) {
 
 func TestFindProgramByID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	program, err := client.Program.FindProgramByID(context.Background(), 1120, &GeneralOptions{
+	program, err := client.Program.GetProgramByID(context.Background(), 1120, &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
-		t.Errorf("Error occured in FindProgram(), got error: %v", err)
+		t.Errorf("Error occured in GetProgramByID(), got error: %v", err)
 	}
 	fmt.Println(program, err)
 	t.Errorf("hsajdaksd")
+}
+
+func TestListAllProgramCategories(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	programCategories, err := client.Program.ListAllProgramCategories(context.Background(), &GeneralOptions{
+		Format: JSON,
+	})
+	if err != nil {
+		t.Errorf("Error occurred in ListAllProgramCategories(), got error: %v", err)
+	}
+
+	for _, category := range programCategories {
+		fmt.Println(category.Name)
+	}
+	t.Errorf("HEYO! :D")
+}
+
+func TestGetProgramCategoryByID(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	programCategory, err := client.Program.GetProgramCategoryByID(context.Background(), 2, &GeneralOptions{
+		Format: JSON,
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+	}
+	fmt.Println(programCategory)
+
+	t.Errorf("IDSDSD")
 }
