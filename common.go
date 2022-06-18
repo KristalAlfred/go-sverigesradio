@@ -2,9 +2,7 @@ package sverigesradio
 
 import (
 	"context"
-	"errors"
 	"net/http"
-	"reflect"
 )
 
 // GeneralParameters represents a set of general parameters that
@@ -43,11 +41,7 @@ const (
 )
 
 func getRequest(s *ProgramService, relativeEndpoint string, ctx context.Context, opt interface{}) (*http.Request, error) {
-	if reflect.ValueOf(opt).Kind() != reflect.Struct {
-		return nil, errors.New("opt must be a struct")
-	}
-
-	r, err := addOptions(programEndpoint, opt)
+	r, err := addOptions(relativeEndpoint, opt)
 	if err != nil {
 		return nil, err
 	}

@@ -12,6 +12,9 @@ const (
 	programBroadcastEndpoint = "broadcasts"
 )
 
+// This service implements the methods described in this section
+// of the official documentation:
+// https://api.sr.se/api/documentation/v2/metoder/program.html
 type ProgramService service
 
 // Program represents a Sveriges Radio show
@@ -104,8 +107,8 @@ type ProgramCategoriesResponse struct {
 	ProgramCategories []*ProgramCategory `json:"programcategories"`
 }
 
-func (s *ProgramService) ListAllProgramCategories(ctx context.Context, opt GeneralOptions) ([]*ProgramCategory, error) {
-	req, err := getRequest(s, programEndpoint, ctx, opt)
+func (s *ProgramService) ListAllProgramCategories(ctx context.Context, opt *GeneralOptions) ([]*ProgramCategory, error) {
+	req, err := getRequest(s, programCategoryEndpoint, ctx, &opt)
 	if err != nil {
 		return nil, err
 	}
