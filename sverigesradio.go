@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	BaseURL = "https://api.sr.se/api/v2/"
+	defaultBaseURL = "https://api.sr.se/api/v2/"
 )
 
 type Client struct {
@@ -25,12 +25,12 @@ type Client struct {
 	// TODO: Uncomment when these exist
 	// Audio          *AudioService
 	// Channel       *ChannelService
-	// Episode        *EpisodeService
+	Episode *EpisodeService
 	// Extrabroadcast *ExtrabroadcastService
 	// Group          *GroupService
 	// Music          *MusicService
-	// News           *NewsService
-	// Program        *ProgramService
+	// News 		  *NewsService
+	Program *ProgramService
 	// Tableau        *TableauService
 	// Toplist        *ToplistService
 	// Traffic        *TrafficService
@@ -45,7 +45,7 @@ func NewClient(httpClient *http.Client) *Client {
 		httpClient = &http.Client{}
 	}
 
-	baseURL, _ := url.Parse(BaseURL)
+	baseURL, _ := url.Parse(defaultBaseURL)
 
 	c := &Client{
 		client:  httpClient,
