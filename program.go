@@ -213,7 +213,7 @@ type PodfileOptions struct {
 	ProgramID int `url:"programid,omitempty"`
 }
 
-type podfileResponse struct {
+type podfilesResponse struct {
 	Copyright string     `json:"copyright"`
 	Podfiles  []*Podfile `json:"podfiles"`
 	Pagination
@@ -225,9 +225,29 @@ func (s *ProgramService) GetAllProgramPodfiles(ctx context.Context, opt *Podfile
 		return nil, err
 	}
 
-	var resp *podfileResponse
+	var resp *podfilesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp.Podfiles, nil
+}
+
+type podfileResponse struct {
+	Copyright string   `json:"copyright,omitempty"`
+	Podfile   *Podfile `json:"podfile,omitempty"`
+}
+
+func (s *ProgramService) GetPodfileByID(ctx context.Context, id int, opt *GeneralOptions) (*Podfile, error) {
+	p := path.Join(programPodfileEndpoint, strconv.Itoa(id))
+	r, err := addOptions(p, opt)
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *podfileResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Podfile, nil
 }

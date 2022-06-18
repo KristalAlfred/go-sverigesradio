@@ -102,3 +102,16 @@ func TestGetAllProgramPodfiles(t *testing.T) {
 
 	t.Errorf("IDSDSD")
 }
+
+func TestGetPodfileByID(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	podfile, err := client.Program.GetPodfileByID(context.Background(), 4126279, &GeneralOptions{
+		Format: JSON,
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+	}
+	fmt.Println(podfile)
+
+	t.Errorf("IDSDSD")
+}
