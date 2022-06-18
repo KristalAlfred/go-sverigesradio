@@ -3,6 +3,8 @@ package sverigesradio
 import (
 	"context"
 	"fmt"
+	"path"
+	"strconv"
 )
 
 const (
@@ -46,11 +48,11 @@ type Program struct {
 	Payoff            string `json:"payoff,omitempty"`
 }
 
-type ProgramOptions struct {
+type ListProgramOptions struct {
 	GeneralOptions
-	ChannelID         *int  `json:"channelid,omitempty"`
-	ProgramCategoryID *int  `json:"programcategoryid,omitempty"`
-	IsArchived        *bool `json:"isarchived,omitempty"`
+	ChannelID         *int  `url:"channelid,omitempty"`
+	ProgramCategoryID *int  `url:"programcategoryid,omitempty"`
+	IsArchived        *bool `url:"isarchived,omitempty"`
 }
 
 type ListProgramsResponse struct {
@@ -58,7 +60,7 @@ type ListProgramsResponse struct {
 	Programs  []*Program `json:"programs"`
 }
 
-func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ProgramOptions) ([]*Program, error) {
+func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ListProgramOptions) ([]*Program, error) {
 	r, err := addOptions(programEndpoint, opt)
 	if err != nil {
 		return nil, err
@@ -76,4 +78,28 @@ func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ProgramOption
 		return nil, err
 	}
 	return resp.Programs, nil
+}
+
+type FindProgramOptions struct {
+	ProgramID int
+}
+
+type FindProgramsResponse struct {
+	Copyright string   `json:"copyright"`
+	Program   *Program `json:"program"`
+}
+
+func (s *ProgramService) FindProgram(ctx context.Context, programID int, generalOptions *GeneralOptions) (*Program, error) {
+	p := path.Join(programEndpoint, strconv.Itoa(programID))
+	r, err := addOptions(p, generalOptions)
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *FindProgramsResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Program, nil
 }
