@@ -179,7 +179,7 @@ type broadcastsResponse struct {
 	Pagination
 }
 
-func (s *ProgramService) GetAllBroadcasts(ctx context.Context, opt *BroadcastOptions) ([]*Broadcast, error) {
+func (s *ProgramService) GetAllProgramBroadcasts(ctx context.Context, opt *BroadcastOptions) ([]*Broadcast, error) {
 	req, err := getRequest(s, programBroadcastEndpoint, ctx, opt)
 	if err != nil {
 		return nil, err
@@ -190,4 +190,44 @@ func (s *ProgramService) GetAllBroadcasts(ctx context.Context, opt *BroadcastOpt
 		return nil, err
 	}
 	return resp.Broadcasts, nil
+}
+
+type Podfile struct {
+	Title           string `json:"title"`
+	Description     string `json:"description"`
+	Filesizeinbytes int    `json:"filesizeinbytes"`
+	Program         struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"program"`
+	Availablefromutc string `json:"availablefromutc"`
+	Duration         int    `json:"duration"`
+	Publishdateutc   string `json:"publishdateutc"`
+	ID               int    `json:"id"`
+	URL              string `json:"url"`
+	Statkey          string `json:"statkey"`
+}
+
+type PodfileOptions struct {
+	GeneralOptions
+	ProgramID int `url:"programid,omitempty"`
+}
+
+type podfileResponse struct {
+	Copyright string     `json:"copyright"`
+	Podfiles  []*Podfile `json:"podfiles"`
+	Pagination
+}
+
+func (s *ProgramService) GetAllProgramPodfiles(ctx context.Context, opt *PodfileOptions) ([]*Podfile, error) {
+	req, err := getRequest(s, programPodfileEndpoint, ctx, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *podfileResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Podfiles, nil
 }

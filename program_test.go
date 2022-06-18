@@ -67,7 +67,7 @@ func TestGetProgramCategoryByID(t *testing.T) {
 
 func TestGetAllBroadcasts(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	broadcasts, err := client.Program.GetAllBroadcasts(context.Background(), &BroadcastOptions{
+	broadcasts, err := client.Program.GetAllProgramBroadcasts(context.Background(), &BroadcastOptions{
 		ProgramID: 3718,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -77,7 +77,27 @@ func TestGetAllBroadcasts(t *testing.T) {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
 	for _, broadcast := range broadcasts {
-		fmt.Println(broadcast.Title)
+		for _, broadcastfile := range broadcast.Broadcastfiles {
+			fmt.Println(broadcastfile.URL)
+		}
+	}
+
+	t.Errorf("IDSDSD")
+}
+
+func TestGetAllProgramPodfiles(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	podfiles, err := client.Program.GetAllProgramPodfiles(context.Background(), &PodfileOptions{
+		ProgramID: 3117,
+		GeneralOptions: GeneralOptions{
+			Format: JSON,
+		},
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+	}
+	for _, podfile := range podfiles {
+		fmt.Println(podfile.Title)
 	}
 
 	t.Errorf("IDSDSD")
