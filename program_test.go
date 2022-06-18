@@ -9,7 +9,7 @@ import (
 
 func TestListAllPrograms(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	programs, err := client.Program.ListAllPrograms(context.Background(), &ListProgramOptions{
+	programs, err := client.Program.GetAllPrograms(context.Background(), &ProgramOptions{
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -61,6 +61,24 @@ func TestGetProgramCategoryByID(t *testing.T) {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
 	fmt.Println(programCategory)
+
+	t.Errorf("IDSDSD")
+}
+
+func TestGetAllBroadcasts(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	broadcasts, err := client.Program.GetAllBroadcasts(context.Background(), &BroadcastOptions{
+		ProgramID: 3718,
+		GeneralOptions: GeneralOptions{
+			Format: JSON,
+		},
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+	}
+	for _, broadcast := range broadcasts {
+		fmt.Println(broadcast.Title)
+	}
 
 	t.Errorf("IDSDSD")
 }

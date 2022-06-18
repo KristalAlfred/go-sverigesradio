@@ -10,6 +10,7 @@ const (
 	programEndpoint          = "programs"
 	programCategoryEndpoint  = "programcategories"
 	programBroadcastEndpoint = "broadcasts"
+	programPodfileEndpoint   = "podfiles"
 )
 
 // This service implements the methods described in this section
@@ -52,32 +53,32 @@ type Program struct {
 	Payoff            string `json:"payoff,omitempty"`
 }
 
-type ListProgramOptions struct {
+type ProgramOptions struct {
 	GeneralOptions
 	ChannelID         *int  `url:"channelid,omitempty"`
 	ProgramCategoryID *int  `url:"programcategoryid,omitempty"`
 	IsArchived        *bool `url:"isarchived,omitempty"`
 }
 
-type ListProgramsResponse struct {
+type programsResponse struct {
 	Copyright string     `json:"copyright"`
 	Programs  []*Program `json:"programs"`
 }
 
-func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ListProgramOptions) ([]*Program, error) {
+func (s *ProgramService) GetAllPrograms(ctx context.Context, opt *ProgramOptions) ([]*Program, error) {
 	req, err := getRequest(s, programEndpoint, ctx, opt)
 	if err != nil {
 		return nil, err
 	}
 
-	var resp *ListProgramsResponse
+	var resp *programsResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp.Programs, nil
 }
 
-type FindProgramsResponse struct {
+type getProgramsResponse struct {
 	Copyright string   `json:"copyright"`
 	Program   *Program `json:"program"`
 }
@@ -90,7 +91,7 @@ func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOpti
 		return nil, err
 	}
 
-	var resp *FindProgramsResponse
+	var resp *getProgramsResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
@@ -102,7 +103,7 @@ type ProgramCategory struct {
 	Name string
 }
 
-type ProgramCategoriesResponse struct {
+type programCategoriesResponse struct {
 	Copyright         string             `json:"copyright"`
 	ProgramCategories []*ProgramCategory `json:"programcategories"`
 }
@@ -113,14 +114,14 @@ func (s *ProgramService) ListAllProgramCategories(ctx context.Context, opt *Gene
 		return nil, err
 	}
 
-	var resp *ProgramCategoriesResponse
+	var resp *programCategoriesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp.ProgramCategories, nil
 }
 
-type ProgramCategoryResponse struct {
+type programCategoryResponse struct {
 	Copyright       string           `json:"copyright"`
 	ProgramCategory *ProgramCategory `json:"programcategory"`
 }
@@ -133,9 +134,60 @@ func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt
 		return nil, err
 	}
 
-	var resp *ProgramCategoryResponse
+	var resp *programCategoryResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp.ProgramCategory, nil
+}
+
+type Broadcast struct {
+	ID               int    `json:"id"`
+	Title            string `json:"title"`
+	Description      string `json:"description"`
+	Broadcastdateutc string `json:"broadcastdateutc"`
+	Totalduration    int    `json:"totalduration"`
+	Image            string `json:"image"`
+	Imagetemplate    string `json:"imagetemplate"`
+	Availablestoputc string `json:"availablestoputc"`
+	Playlist         struct {
+		Duration       int    `json:"duration"`
+		Publishdateutc string `json:"publishdateutc"`
+		ID             int    `json:"id"`
+		URL            string `json:"url"`
+		Statkey        string `json:"statkey"`
+	} `json:"playlist"`
+	Broadcastfiles []struct {
+		Duration       int    `json:"duration"`
+		Publishdateutc string `json:"publishdateutc"`
+		ID             int    `json:"id"`
+		URL            string `json:"url"`
+		Statkey        string `json:"statkey"`
+	} `json:"broadcastfiles"`
+}
+
+type BroadcastOptions struct {
+	GeneralOptions
+	ProgramID int `url:"programid,omitempty"`
+}
+
+type broadcastsResponse struct {
+	Description string       `json:"description"`
+	Copyright   string       `json:"copyright"`
+	Name        string       `json:"name"`
+	Broadcasts  []*Broadcast `json:"broadcasts"`
+	Pagination
+}
+
+func (s *ProgramService) GetAllBroadcasts(ctx context.Context, opt *BroadcastOptions) ([]*Broadcast, error) {
+	req, err := getRequest(s, programBroadcastEndpoint, ctx, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *broadcastsResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Broadcasts, nil
 }
