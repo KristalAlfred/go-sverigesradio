@@ -2,9 +2,11 @@ package sverigesradio
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -98,4 +100,39 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 	req.Header.Set("Accept", "application/json")
 
 	return req, nil
+}
+
+func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+	req = req.WithContext(ctx)
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		// If we got an error, and the context has been canceled,
+		// the context's error is probably more useful.
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+
+		return nil, err
+	}
+
+	defer func() {
+		io.CopyN(ioutil.Discard, resp.Body, 512)
+		resp.Body.Close()
+	}()
+
+	if v != nil {
+		if w, ok := v.(io.Writer); ok {
+			io.Copy(w, resp.Body)
+		} else {
+			err = json.NewDecoder(resp.Body).Decode(v)
+			if err == io.EOF {
+				err = nil
+			}
+		}
+	}
+
+	return resp, err
 }
