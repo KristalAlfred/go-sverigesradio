@@ -80,16 +80,12 @@ func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ListProgramOp
 	return resp.Programs, nil
 }
 
-type FindProgramOptions struct {
-	ProgramID int
-}
-
 type FindProgramsResponse struct {
 	Copyright string   `json:"copyright"`
 	Program   *Program `json:"program"`
 }
 
-func (s *ProgramService) FindProgram(ctx context.Context, programID int, generalOptions *GeneralOptions) (*Program, error) {
+func (s *ProgramService) FindProgramByID(ctx context.Context, programID int, generalOptions *GeneralOptions) (*Program, error) {
 	p := path.Join(programEndpoint, strconv.Itoa(programID))
 	r, err := addOptions(p, generalOptions)
 	req, err := s.client.NewRequest("GET", r, nil)
