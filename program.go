@@ -11,7 +11,7 @@ const (
 
 type ProgramService service
 
-// Program represents a Sveriges Radio show. Note: different from an episode
+// Program represents a Sveriges Radio show
 type Program struct {
 	Description     string `json:"description,omitempty"`
 	Programcategory struct {
@@ -47,6 +47,7 @@ type Program struct {
 }
 
 type ProgramOptions struct {
+	GeneralOptions
 	ChannelID         *int  `json:"channelid,omitempty"`
 	ProgramCategoryID *int  `json:"programcategoryid,omitempty"`
 	IsArchived        *bool `json:"isarchived,omitempty"`
@@ -62,7 +63,7 @@ func (s *ProgramService) ListAllPrograms(ctx context.Context, opt *ProgramOption
 	if err != nil {
 		return nil, err
 	}
-	r = r + "&format=json&pagination=false"
+
 	fmt.Printf("Printing options: %v\n", opt)
 
 	req, err := s.client.NewRequest("GET", r, nil)
