@@ -9,7 +9,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
+
+	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -55,16 +58,38 @@ func NewClient(httpClient *http.Client) *Client {
 	// TODO: Uncomment these when they exist
 	// c.Audio = (*&AudioService)(&c.common)
 	// c.Channel = (*&ChannelService)(&c.common)
-	// c.Episode = (*&EpisodeService)(&c.common)
+	c.Episode = (*EpisodeService)(&c.common)
 	// c.Extrabroadcast = (*&ExtrabroadcastService)(&c.common)
 	// c.Group = (*&GroupService)(&c.common)
 	// c.Music = (*&MusicService)(&c.common)
 	// c.News = (*&NewsService)(&c.common)
-	// c.Program = (*&ProgramService)(&c.common)
+	c.Program = (*ProgramService)(&c.common)
 	// c.Tableau = (*&TableauService)(&c.common)
 	// c.Toplist = (*&ToplistService)(&c.common)
 	// c.Traffic = (*&TrafficService)(&c.common)
 	return c
+}
+
+// addOptions adds the parameters in opt as URL query parameters to s. opt
+// must be a struct whose fields may contain "url" tags.
+func addOptions(s string, opt interface{}) (string, error) {
+	v := reflect.ValueOf(opt)
+	if v.Kind() == reflect.Ptr && v.IsNil() {
+		return s, nil
+	}
+
+	u, err := url.Parse(s)
+	if err != nil {
+		return s, err
+	}
+
+	qs, err := query.Values(opt)
+	if err != nil {
+		return s, err
+	}
+
+	u.RawQuery = qs.Encode()
+	return u.String(), nil
 }
 
 func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
