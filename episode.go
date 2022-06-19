@@ -63,20 +63,20 @@ type Episode struct {
 	} `json:"downloadpodfile"`
 }
 
-type EpisodeOptions struct {
+type EpisodesOptions struct {
 	GeneralOptions
 	ProgramID int       `url:"programid"`
 	FromDate  time.Time `url:"fromdate,omitempty"`
 	ToDate    time.Time `url:"todate,omitempty"`
 }
 
-type episodeResponse struct {
+type episodesResponse struct {
 	Copyright string `json:"copyright"`
 	Episodes  []*Episode
 	Pagination
 }
 
-func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodeOptions) ([]*Episode, error) {
+func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodesOptions) ([]*Episode, error) {
 	endpoint := path.Join(episodeEndpoint, "index")
 	r, err := addOptions(endpoint, opt)
 	if err != nil {
@@ -88,7 +88,7 @@ func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodeOptions) (
 		return nil, err
 	}
 
-	var resp *episodeResponse
+	var resp *episodesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
@@ -122,9 +122,39 @@ func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOp
 		return nil, err
 	}
 
-	var resp *episodeResponse
+	var resp *episodesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp.Episodes, nil
+}
+
+type EpisodeOptions struct {
+	GeneralOptions
+	EpisodeID int `url:"id,omitempty"`
+}
+
+type episodeResponse struct {
+	Copyright string   `json:"copyright"`
+	Episode   *Episode `json:"episode"`
+}
+
+func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*Episode, error) {
+	endpoint := path.Join(episodeEndpoint, "get")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *episodeResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Episode, nil
 }
