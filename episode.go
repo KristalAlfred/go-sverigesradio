@@ -219,3 +219,41 @@ func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisod
 	}
 	return resp.Episode, nil
 }
+
+type EpisodeGroupOptions struct {
+	GeneralOptions
+	GroupID int `url:"id"`
+}
+
+type EpisodeGroup struct {
+	ID          int        `json:"id"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	Episodes    []*Episode `json:"episodes"`
+}
+
+type episodeGroupResponse struct {
+	Copyright    string `json:"copyright"`
+	EpisodeGroup `json:"episodegroup"`
+	Pagination
+}
+
+func (s *EpisodeService) GetEpisodesByGroup(ctx context.Context, opt *EpisodeGroupOptions) ([]*Episode, error) {
+	endpoint := path.Join(episodeEndpoint, "group")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *episodeGroupResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Episodes, nil
+}

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetEpisodes(t *testing.T) {
@@ -96,4 +98,20 @@ func TestLatestEpisode(t *testing.T) {
 	fmt.Println(episode.Program.Name)
 
 	t.Errorf("IDSDSD")
+}
+
+func TestGetEpisodeByGroup(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	episodes, err := client.Episode.GetEpisodesByGroup(context.Background(), &EpisodeGroupOptions{
+		GroupID: 23037,
+		GeneralOptions: GeneralOptions{
+			Format: JSON,
+		},
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
+	}
+	for _, episode := range episodes {
+		assert.Equal(t, episode.Program.Name, "P1 Dokumentär", "All episodes in category 23027 should be from program P1 Dokumentär")
+	}
 }
