@@ -94,3 +94,37 @@ func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodeOptions) (
 	}
 	return resp.Episodes, nil
 }
+
+type EpisodeSearchOptions struct {
+	GeneralOptions
+	Query     string
+	ChannelID int
+	ProgramID int
+}
+
+type episodeSearchResponse struct {
+	Copyright  string     `json:"copyright,omitempty"`
+	Episodes   []*Episode `json:"episodes,omitempty"`
+	Pagination `json:"pagination,omitempty"`
+}
+
+// Searches for episodes matching a query. The API only allows
+// a maximum return size of 25 episodes
+func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOptions) ([]*Episode, error) {
+	endpoint := path.Join(episodeEndpoint, "search")
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *episodeResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Episodes, nil
+}
