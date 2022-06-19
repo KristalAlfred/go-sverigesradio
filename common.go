@@ -1,10 +1,5 @@
 package sverigesradio
 
-import (
-	"context"
-	"net/http"
-)
-
 // GeneralParameters represents a set of general parameters that
 // can be applied to many of the api methods.
 type GeneralOptions struct {
@@ -26,6 +21,13 @@ type GeneralOptions struct {
 	Format Format `url:"format,omitempty"`
 }
 
+type Pagination struct {
+	Page       int `json:"page"`
+	Size       int `json:"size"`
+	Totalhits  int `json:"totalhits"`
+	Totalpages int `json:"totalpages"`
+}
+
 type AudioQuality string
 
 const (
@@ -39,17 +41,3 @@ type Format string
 const (
 	JSON Format = "json"
 )
-
-func getRequest(s *ProgramService, relativeEndpoint string, ctx context.Context, opt interface{}) (*http.Request, error) {
-	r, err := addOptions(relativeEndpoint, opt)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := s.client.NewRequest("GET", r, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}

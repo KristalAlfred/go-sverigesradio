@@ -9,7 +9,7 @@ import (
 
 func TestListAllPrograms(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	programs, err := client.Program.GetAllPrograms(context.Background(), &ProgramOptions{
+	programs, err := client.Program.GetPrograms(context.Background(), &ProgramOptions{
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -39,7 +39,7 @@ func TestFindProgramByID(t *testing.T) {
 
 func TestListAllProgramCategories(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	programCategories, err := client.Program.ListAllProgramCategories(context.Background(), &GeneralOptions{
+	programCategories, err := client.Program.ListProgramCategories(context.Background(), &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
@@ -67,7 +67,7 @@ func TestGetProgramCategoryByID(t *testing.T) {
 
 func TestGetAllBroadcasts(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	broadcasts, err := client.Program.GetAllProgramBroadcasts(context.Background(), &BroadcastOptions{
+	broadcasts, err := client.Program.GetProgramBroadcasts(context.Background(), &BroadcastOptions{
 		ProgramID: 3718,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -87,7 +87,7 @@ func TestGetAllBroadcasts(t *testing.T) {
 
 func TestGetAllProgramPodfiles(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	podfiles, err := client.Program.GetAllProgramPodfiles(context.Background(), &PodfileOptions{
+	podfiles, err := client.Program.GetProgramPodfiles(context.Background(), &PodfileOptions{
 		ProgramID: 3117,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,

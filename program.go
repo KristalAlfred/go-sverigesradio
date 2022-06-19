@@ -65,8 +65,13 @@ type programsResponse struct {
 	Programs  []*Program `json:"programs"`
 }
 
-func (s *ProgramService) GetAllPrograms(ctx context.Context, opt *ProgramOptions) ([]*Program, error) {
-	req, err := getRequest(s, programEndpoint, ctx, opt)
+func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) ([]*Program, error) {
+	r, err := addOptions(programEndpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -108,8 +113,13 @@ type programCategoriesResponse struct {
 	ProgramCategories []*ProgramCategory `json:"programcategories"`
 }
 
-func (s *ProgramService) ListAllProgramCategories(ctx context.Context, opt *GeneralOptions) ([]*ProgramCategory, error) {
-	req, err := getRequest(s, programCategoryEndpoint, ctx, &opt)
+func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *GeneralOptions) ([]*ProgramCategory, error) {
+	r, err := addOptions(programEndpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -179,8 +189,13 @@ type broadcastsResponse struct {
 	Pagination
 }
 
-func (s *ProgramService) GetAllProgramBroadcasts(ctx context.Context, opt *BroadcastOptions) ([]*Broadcast, error) {
-	req, err := getRequest(s, programBroadcastEndpoint, ctx, opt)
+func (s *ProgramService) GetProgramBroadcasts(ctx context.Context, opt *BroadcastOptions) ([]*Broadcast, error) {
+	r, err := addOptions(programBroadcastEndpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -219,8 +234,13 @@ type podfilesResponse struct {
 	Pagination
 }
 
-func (s *ProgramService) GetAllProgramPodfiles(ctx context.Context, opt *PodfileOptions) ([]*Podfile, error) {
-	req, err := getRequest(s, programPodfileEndpoint, ctx, opt)
+func (s *ProgramService) GetProgramPodfiles(ctx context.Context, opt *PodfileOptions) ([]*Podfile, error) {
+	r, err := addOptions(programPodfileEndpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
 		return nil, err
 	}
