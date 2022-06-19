@@ -189,3 +189,33 @@ func (s *EpisodeService) GetEpisodeList(ctx context.Context, opt *EpisodeListOpt
 	}
 	return resp.Episodes, nil
 }
+
+type LatestEpisodeOptions struct {
+	GeneralOptions
+	ProgramID int `url:"programid,omitempty"`
+}
+
+type latestEpisodeResponse struct {
+	Copyright string   `json:"copyright"`
+	Episode   *Episode `json:"episode"`
+}
+
+func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisodeOptions) (*Episode, error) {
+	endpoint := path.Join(episodeEndpoint, "getlatest")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *latestEpisodeResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Episode, nil
+}

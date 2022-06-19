@@ -81,3 +81,19 @@ func TestGetEpisodeList(t *testing.T) {
 
 	t.Errorf("IDSDSD")
 }
+
+func TestLatestEpisode(t *testing.T) {
+	client := NewClient(http.DefaultClient)
+	episode, err := client.Episode.GetLatestEpisode(context.Background(), &LatestEpisodeOptions{
+		ProgramID: 3117,
+		GeneralOptions: GeneralOptions{
+			Format: JSON,
+		},
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
+	}
+	fmt.Println(episode.Program.Name)
+
+	t.Errorf("IDSDSD")
+}
