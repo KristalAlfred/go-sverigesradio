@@ -2,7 +2,9 @@ package sverigesradio
 
 import (
 	"context"
+	"fmt"
 	"path"
+	"time"
 )
 
 const (
@@ -34,7 +36,7 @@ type Playlist struct {
 
 type ChannelOptions struct {
 	GeneralOptions
-	ChannelId int `url:"channelid"`
+	ChannelID int `url:"channelid"`
 }
 
 type playlistResponse struct {
@@ -59,4 +61,78 @@ func (s *MusicService) GetCurrentlyPlayingSongs(ctx context.Context, opt *Channe
 		return nil, err
 	}
 	return resp.Playlist, nil
+}
+
+type SongsOptions struct {
+	GeneralOptions
+	ID        int       `url:"id,omitempty"`
+	StartDate time.Time `url:"startdatetime,omitempty"`
+	EndDate   time.Time `url:"enddatetime,omitempty"`
+}
+
+type songsResponse struct {
+	Songs []*Song `json:"song,omitempty"`
+}
+
+func (s *MusicService) GetSongsByChannelID(ctx context.Context, opt *SongsOptions) ([]*Song, error) {
+	endpoint := path.Join(musicEndpoint, "getplaylistbychannelid")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(r)
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *songsResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Songs, nil
+}
+
+func (s *MusicService) GetSongsByProgramID(ctx context.Context, opt *SongsOptions) ([]*Song, error) {
+	endpoint := path.Join(musicEndpoint, "getplaylistbyprogramid")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(r)
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *songsResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Songs, nil
+}
+
+func (s *MusicService) GetSongsByEpisodeID(ctx context.Context, opt *SongsOptions) ([]*Song, error) {
+	endpoint := path.Join(musicEndpoint, "getplaylistbyepisodeid")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(r)
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *songsResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Songs, nil
 }
