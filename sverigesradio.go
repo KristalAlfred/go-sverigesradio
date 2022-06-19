@@ -31,7 +31,7 @@ type Client struct {
 	Episode *EpisodeService
 	// Extrabroadcast *ExtrabroadcastService
 	// Group          *GroupService
-	// Music          *MusicService
+	Music *MusicService
 	// News 		  *NewsService
 	Program *ProgramService
 	// Tableau        *TableauService
@@ -61,7 +61,7 @@ func NewClient(httpClient *http.Client) *Client {
 	c.Episode = (*EpisodeService)(&c.common)
 	// c.Extrabroadcast = (*&ExtrabroadcastService)(&c.common)
 	// c.Group = (*&GroupService)(&c.common)
-	// c.Music = (*&MusicService)(&c.common)
+	c.Music = (*MusicService)(&c.common)
 	// c.News = (*&NewsService)(&c.common)
 	c.Program = (*ProgramService)(&c.common)
 	// c.Tableau = (*&TableauService)(&c.common)
