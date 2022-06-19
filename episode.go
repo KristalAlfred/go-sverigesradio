@@ -158,3 +158,34 @@ func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*
 	}
 	return resp.Episode, nil
 }
+
+type EpisodeListOptions struct {
+	GeneralOptions
+	EpisodeIDs []int `url:"ids,comma,omitempty"`
+}
+
+type episodeListResponse struct {
+	Copyright string     `json:"copyright"`
+	Episodes  []*Episode `json:"episodes"`
+	Pagination
+}
+
+func (s *EpisodeService) GetEpisodeList(ctx context.Context, opt *EpisodeListOptions) ([]*Episode, error) {
+	endpoint := path.Join(episodeEndpoint, "getlist")
+
+	r, err := addOptions(endpoint, opt)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", r, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *episodeListResponse
+	if _, err := s.client.Do(ctx, req, &resp); err != nil {
+		return nil, err
+	}
+	return resp.Episodes, nil
+}
