@@ -28,6 +28,14 @@ type Pagination struct {
 	Totalpages int `json:"totalpages"`
 }
 
+type Channel struct {
+	Id                       int      `json:"id,omitempty"`
+	Name                     string   `json:"name,omitempty"`
+	PreviousScheduledEpisode *Episode `json:"previousscheduledepisode,omitempty"`
+	CurrentScheduledEpisode  *Episode `json:"currentscheduledepisode,omitempty"`
+	NextScheduledEpisode     *Episode `json:"nextscheduledepisode,omitempty"`
+}
+
 type AudioQuality string
 
 const (
