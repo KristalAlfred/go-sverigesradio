@@ -9,8 +9,7 @@ import (
 
 func TestGetScheduledEpisodes(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	schedule, err := client.Tableau.GetScheduledEpisodes(context.Background(), &ScheduleOptions{
-		ChannelID: 164,
+	channels, err := client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -19,12 +18,25 @@ func TestGetScheduledEpisodes(t *testing.T) {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
 
-	for _, scheduleEpisode := range *schedule {
-		fmt.Println(scheduleEpisode.Title)
+	for _, channel := range channels {
+		if channel.CurrentScheduledEpisode != nil {
+			fmt.Println(channel.CurrentScheduledEpisode.Title)
+		}
 	}
+
+	channel, err := client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
+		ChannelID: 163,
+		GeneralOptions: GeneralOptions{
+			Format: JSON,
+		},
+	})
+	if err != nil {
+		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+	}
+
+	fmt.Println(channel[0].CurrentScheduledEpisode.Title)
 
 	t.Errorf("heyo")
 
 	// assert.Equal(t, podfile.Program.Name, "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
-
 }
