@@ -15,9 +15,7 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
-const (
-	defaultBaseURL = "https://api.sr.se/api/v2/"
-)
+const defaultBaseURL = "https://api.sr.se/api/v2/"
 
 type Client struct {
 	BaseURL *url.URL
@@ -122,6 +120,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	req = req.WithContext(ctx)
 
 	resp, err := c.client.Do(req)
+
 	if err != nil {
 		// If we got an error, and the context has been canceled,
 		// the context's error is probably more useful.

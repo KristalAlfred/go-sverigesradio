@@ -12,10 +12,14 @@ import (
 
 func TestGetEpisodes(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 3718
+	from := time.Date(2021, time.December, 1, 0, 0, 0, 0, &time.Location{})
+	to := time.Date(2022, time.January, 1, 0, 0, 0, 0, &time.Location{})
 	episodes, err := client.Episode.GetEpisodes(context.Background(), &EpisodesOptions{
-		ProgramID: 3718,
-		FromDate:  time.Date(2021, time.December, 1, 0, 0, 0, 0, &time.Location{}),
-		ToDate:    time.Date(2022, time.January, 1, 0, 0, 0, 0, &time.Location{}),
+		ProgramID: &ID,
+		FromDate:  &from,
+		ToDate:    &to,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -32,8 +36,11 @@ func TestGetEpisodes(t *testing.T) {
 
 func TestSearchEpisode(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	query := "tankesmedjan"
+
 	episodes, err := client.Episode.SearchEpisode(context.Background(), &EpisodeSearchOptions{
-		Query: "tankesmedjan",
+		Query: &query,
 		GeneralOptions: GeneralOptions{
 			Format:     JSON,
 			Pagination: false,
@@ -52,8 +59,11 @@ func TestSearchEpisode(t *testing.T) {
 
 func TestGetEpisode(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 602474
+
 	episode, err := client.Episode.GetEpisode(context.Background(), &EpisodeOptions{
-		EpisodeID: 602474,
+		EpisodeID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -68,8 +78,11 @@ func TestGetEpisode(t *testing.T) {
 
 func TestGetEpisodeList(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	episodeIDs := []int{697028, 681604}
+
 	episodes, err := client.Episode.GetEpisodeList(context.Background(), &EpisodeListOptions{
-		EpisodeIDs: []int{697028, 681604},
+		EpisodeIDs: &episodeIDs,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -86,8 +99,11 @@ func TestGetEpisodeList(t *testing.T) {
 
 func TestLatestEpisode(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 3117
+
 	episode, err := client.Episode.GetLatestEpisode(context.Background(), &LatestEpisodeOptions{
-		ProgramID: 3117,
+		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -102,8 +118,11 @@ func TestLatestEpisode(t *testing.T) {
 
 func TestGetEpisodeByGroup(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 23037
+
 	episodes, err := client.Episode.GetEpisodesByGroup(context.Background(), &EpisodeGroupOptions{
-		GroupID: 23037,
+		GroupID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},

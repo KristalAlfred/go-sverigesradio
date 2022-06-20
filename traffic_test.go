@@ -9,9 +9,11 @@ import (
 
 func TestGetArea(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	lat, long := 60.0, 12.0
 	area, err := client.Traffic.GetArea(context.Background(), &TrafficAreaOptions{
-		Latitude:  60.0,
-		Longitude: 12.0,
+		Latitude:  &lat,
+		Longitude: &long,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},

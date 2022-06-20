@@ -1,11 +1,26 @@
 package sverigesradio
 
+// Set up some initial constants
+type AudioQuality string
+
+const (
+	Low      AudioQuality = "lo"
+	Standard AudioQuality = "normal"
+	High     AudioQuality = "high"
+)
+
+type Format string
+
+const (
+	JSON Format = "json"
+)
+
 // GeneralParameters represents a set of general parameters that
 // can be applied to many of the api methods.
 type GeneralOptions struct {
 	// Activate pagination when set to true
 	// Default: true
-	Pagination bool `url:"pagination"`
+	Pagination bool `url:"pagination,omitempty"`
 
 	// Set the maximum number of elements returned
 	// Default: 10
@@ -22,30 +37,21 @@ type GeneralOptions struct {
 }
 
 type Pagination struct {
-	Page       int `json:"page"`
-	Size       int `json:"size"`
-	Totalhits  int `json:"totalhits"`
-	Totalpages int `json:"totalpages"`
+	// Activate pagination when set to true
+	// Default: true
+	Page int `json:"page,omitempty"`
+
+	// Set the maximum number of elements returned
+	// Default: 10
+	Size       int `json:"size,omitempty"`
+	Totalhits  int `json:"totalhits,omitempty"`
+	Totalpages int `json:"totalpages,omitempty"`
 }
 
 type Channel struct {
-	Id                       int      `json:"id,omitempty"`
-	Name                     string   `json:"name,omitempty"`
+	Id                       *int     `json:"id,omitempty"`
+	Name                     *string  `json:"name,omitempty"`
 	PreviousScheduledEpisode *Episode `json:"previousscheduledepisode,omitempty"`
 	CurrentScheduledEpisode  *Episode `json:"currentscheduledepisode,omitempty"`
 	NextScheduledEpisode     *Episode `json:"nextscheduledepisode,omitempty"`
 }
-
-type AudioQuality string
-
-const (
-	Low      AudioQuality = "lo"
-	Standard AudioQuality = "normal"
-	High     AudioQuality = "high"
-)
-
-type Format string
-
-const (
-	JSON Format = "json"
-)

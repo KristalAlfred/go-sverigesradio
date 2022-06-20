@@ -5,9 +5,7 @@ import (
 	"time"
 )
 
-const (
-	extrabroadcastEndpoint = "extra/broadcasts"
-)
+const extrabroadcastEndpoint = "extra/broadcasts"
 
 type ExtrabroadcastService service
 

@@ -13,65 +13,65 @@ const (
 )
 
 type Episode struct {
-	ID          int    `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	URL         string `json:"url"`
-	Program     struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	} `json:"program"`
-	Audiopreference   string `json:"audiopreference"`
-	Audiopriority     string `json:"audiopriority"`
-	Audiopresentation string `json:"audiopresentation"`
-	Publishdateutc    string `json:"publishdateutc"`
-	Imageurl          string `json:"imageurl"`
-	Imageurltemplate  string `json:"imageurltemplate"`
-	Broadcasttime     struct {
-		Starttimeutc string `json:"starttimeutc"`
-		Endtimeutc   string `json:"endtimeutc"`
-	} `json:"broadcasttime"`
-	Listenpodfile struct {
-		Title           string `json:"title"`
-		Description     string `json:"description"`
-		Filesizeinbytes int    `json:"filesizeinbytes"`
-		Program         struct {
-			ID   int    `json:"id"`
-			Name string `json:"name"`
-		} `json:"program"`
-		Availablefromutc string `json:"availablefromutc"`
-		Duration         int    `json:"duration"`
-		Publishdateutc   string `json:"publishdateutc"`
-		ID               int    `json:"id"`
-		URL              string `json:"url"`
-		Statkey          string `json:"statkey"`
-	} `json:"listenpodfile"`
-	Downloadpodfile struct {
-		Title           string `json:"title"`
-		Description     string `json:"description"`
-		Filesizeinbytes int    `json:"filesizeinbytes"`
-		Program         struct {
-			ID   int    `json:"id"`
-			Name string `json:"name"`
-		} `json:"program"`
-		Availablefromutc string `json:"availablefromutc"`
-		Duration         int    `json:"duration"`
-		Publishdateutc   string `json:"publishdateutc"`
-		ID               int    `json:"id"`
-		URL              string `json:"url"`
-		Statkey          string `json:"statkey"`
-	} `json:"downloadpodfile"`
+	ID          *int    `json:"id,omitempty"`
+	Title       *string `json:"title,omitempty"`
+	Description *string `json:"description,omitempty"`
+	URL         *string `json:"url,omitempty"`
+	Program     *struct {
+		ID   *int    `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
+	} `json:"program,omitempty"`
+	Audiopreference   *string `json:"audiopreference,omitempty"`
+	Audiopriority     *string `json:"audiopriority,omitempty"`
+	Audiopresentation *string `json:"audiopresentation,omitempty"`
+	Publishdateutc    *string `json:"publishdateutc,omitempty"`
+	Imageurl          *string `json:"imageurl,omitempty"`
+	Imageurltemplate  *string `json:"imageurltemplate,omitempty"`
+	Broadcasttime     *struct {
+		Starttimeutc *string `json:"starttimeutc,omitempty"`
+		Endtimeutc   *string `json:"endtimeutc,omitempty"`
+	} `json:"broadcasttime,omitempty"`
+	Listenpodfile *struct {
+		Title           *string `json:"title,omitempty"`
+		Description     *string `json:"description,omitempty"`
+		Filesizeinbytes *int    `json:"filesizeinbytes,omitempty"`
+		Program         *struct {
+			ID   *int    `json:"id,omitempty"`
+			Name *string `json:"name,omitempty"`
+		} `json:"program,omitempty"`
+		Availablefromutc *string `json:"availablefromutc,omitempty"`
+		Duration         *int    `json:"duration,omitempty"`
+		Publishdateutc   *string `json:"publishdateutc,omitempty"`
+		ID               *int    `json:"id,omitempty"`
+		URL              *string `json:"url,omitempty"`
+		Statkey          *string `json:"statkey,omitempty"`
+	} `json:"listenpodfile,omitempty"`
+	Downloadpodfile *struct {
+		Title           *string `json:"title,omitempty"`
+		Description     *string `json:"description,omitempty"`
+		Filesizeinbytes *int    `json:"filesizeinbytes,omitempty"`
+		Program         *struct {
+			ID   *int    `json:"id,omitempty"`
+			Name *string `json:"name,omitempty"`
+		} `json:"program,omitempty"`
+		Availablefromutc *string `json:"availablefromutc,omitempty"`
+		Duration         *int    `json:"duration,omitempty"`
+		Publishdateutc   *string `json:"publishdateutc,omitempty"`
+		ID               *int    `json:"id,omitempty"`
+		URL              *string `json:"url,omitempty"`
+		Statkey          *string `json:"statkey,omitempty"`
+	} `json:"downloadpodfile,omitempty"`
 }
 
 type EpisodesOptions struct {
 	GeneralOptions
-	ProgramID int       `url:"programid"`
-	FromDate  time.Time `url:"fromdate,omitempty"`
-	ToDate    time.Time `url:"todate,omitempty"`
+	ProgramID *int       `url:"programid,omitempty"`
+	FromDate  *time.Time `url:"fromdate,omitempty"`
+	ToDate    *time.Time `url:"todate,omitempty"`
 }
 
 type episodesResponse struct {
-	Copyright string `json:"copyright"`
+	Copyright *string `json:"copyright,omitempty"`
 	Episodes  []*Episode
 	Pagination
 }
@@ -97,13 +97,13 @@ func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodesOptions) 
 
 type EpisodeSearchOptions struct {
 	GeneralOptions
-	Query     string
-	ChannelID int
-	ProgramID int
+	Query     *string
+	ChannelID *int
+	ProgramID *int
 }
 
 type episodeSearchResponse struct {
-	Copyright  string     `json:"copyright,omitempty"`
+	Copyright  *string    `json:"copyright,omitempty"`
 	Episodes   []*Episode `json:"episodes,omitempty"`
 	Pagination `json:"pagination,omitempty"`
 }
@@ -131,12 +131,12 @@ func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOp
 
 type EpisodeOptions struct {
 	GeneralOptions
-	EpisodeID int `url:"id,omitempty"`
+	EpisodeID *int `url:"id,omitempty"`
 }
 
 type episodeResponse struct {
-	Copyright string   `json:"copyright"`
-	Episode   *Episode `json:"episode"`
+	Copyright *string  `json:"copyright,omitempty"`
+	Episode   *Episode `json:"episode,omitempty"`
 }
 
 func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*Episode, error) {
@@ -161,12 +161,12 @@ func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*
 
 type EpisodeListOptions struct {
 	GeneralOptions
-	EpisodeIDs []int `url:"ids,comma,omitempty"`
+	EpisodeIDs *[]int `url:"ids,comma,omitempty"`
 }
 
 type episodeListResponse struct {
-	Copyright string     `json:"copyright"`
-	Episodes  []*Episode `json:"episodes"`
+	Copyright *string    `json:"copyright,omitempty"`
+	Episodes  []*Episode `json:"episodes,omitempty"`
 	Pagination
 }
 
@@ -192,12 +192,12 @@ func (s *EpisodeService) GetEpisodeList(ctx context.Context, opt *EpisodeListOpt
 
 type LatestEpisodeOptions struct {
 	GeneralOptions
-	ProgramID int `url:"programid,omitempty"`
+	ProgramID *int `url:"programid,omitempty"`
 }
 
 type latestEpisodeResponse struct {
-	Copyright string   `json:"copyright"`
-	Episode   *Episode `json:"episode"`
+	Copyright *string  `json:"copyright,omitempty"`
+	Episode   *Episode `json:"episode,omitempty"`
 }
 
 func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisodeOptions) (*Episode, error) {
@@ -222,19 +222,19 @@ func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisod
 
 type EpisodeGroupOptions struct {
 	GeneralOptions
-	GroupID int `url:"id"`
+	GroupID *int `url:"id,omitempty"`
 }
 
 type EpisodeGroup struct {
-	ID          int        `json:"id"`
-	Title       string     `json:"title"`
-	Description string     `json:"description"`
-	Episodes    []*Episode `json:"episodes"`
+	ID          *int       `json:"id,omitempty"`
+	Title       *string    `json:"title,omitempty"`
+	Description *string    `json:"description,omitempty"`
+	Episodes    []*Episode `json:"episodes,omitempty"`
 }
 
 type episodeGroupResponse struct {
-	Copyright    string `json:"copyright"`
-	EpisodeGroup `json:"episodegroup"`
+	Copyright    *string `json:"copyright,omitempty"`
+	EpisodeGroup `json:"episodegroup,omitempty"`
 	Pagination
 }
 

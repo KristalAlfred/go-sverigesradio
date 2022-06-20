@@ -7,36 +7,34 @@ import (
 	"time"
 )
 
-const (
-	musicEndpoint = "playlists"
-)
+const musicEndpoint = "playlists"
 
 type MusicService service
 
 type Song struct {
-	Title        string `json:"title"`
-	Description  string `json:"description"`
-	Artist       string `json:"artist"`
-	Composer     string `json:"composer"`
-	Conductor    string `json:"conductor"`
-	Albumname    string `json:"albumname"`
-	Recordlabel  string `json:"recordlabel"`
-	Lyricist     string `json:"lyricist"`
-	Producer     string `json:"producer"`
-	Starttimeutc string `json:"starttimeutc"`
-	Stoptimeutc  string `json:"stoptimeutc"`
+	Title        *string `json:"title,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	Artist       *string `json:"artist,omitempty"`
+	Composer     *string `json:"composer,omitempty"`
+	Conductor    *string `json:"conductor,omitempty"`
+	Albumname    *string `json:"albumname,omitempty"`
+	Recordlabel  *string `json:"recordlabel,omitempty"`
+	Lyricist     *string `json:"lyricist,omitempty"`
+	Producer     *string `json:"producer,omitempty"`
+	Starttimeutc *string `json:"starttimeutc,omitempty"`
+	Stoptimeutc  *string `json:"stoptimeutc,omitempty"`
 }
 
 type Playlist struct {
-	Previoussong Song    `json:"previoussong,omitempty"`
-	Song         Song    `json:"song,omitempty"`
-	NextSong     Song    `json:"nextsong,omitempty"`
-	Channel      Channel `json:"channel,omitempty"`
+	Previoussong *Song    `json:"previoussong,omitempty"`
+	Song         *Song    `json:"song,omitempty"`
+	NextSong     *Song    `json:"nextsong,omitempty"`
+	Channel      *Channel `json:"channel,omitempty"`
 }
 
 type ChannelOptions struct {
 	GeneralOptions
-	ChannelID int `url:"channelid"`
+	ChannelID *int `url:"channelid,omitempty"`
 }
 
 type playlistResponse struct {
@@ -65,9 +63,9 @@ func (s *MusicService) GetCurrentlyPlayingSongs(ctx context.Context, opt *Channe
 
 type SongsOptions struct {
 	GeneralOptions
-	ID        int       `url:"id,omitempty"`
-	StartDate time.Time `url:"startdatetime,omitempty"`
-	EndDate   time.Time `url:"enddatetime,omitempty"`
+	ChannelID *int       `url:"id,omitempty"`
+	StartDate *time.Time `url:"startdatetime,omitempty"`
+	EndDate   *time.Time `url:"enddatetime,omitempty"`
 }
 
 type songsResponse struct {

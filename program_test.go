@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestListAllPrograms(t *testing.T) {
@@ -67,8 +69,11 @@ func TestGetProgramCategoryByID(t *testing.T) {
 
 func TestGetAllBroadcasts(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 3718
+
 	broadcasts, err := client.Program.GetProgramBroadcasts(context.Background(), &BroadcastOptions{
-		ProgramID: 3718,
+		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -87,8 +92,11 @@ func TestGetAllBroadcasts(t *testing.T) {
 
 func TestGetAllProgramPodfiles(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 3117
+
 	podfiles, err := client.Program.GetProgramPodfiles(context.Background(), &PodfileOptions{
-		ProgramID: 3117,
+		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -111,7 +119,6 @@ func TestGetPodfileByID(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
-	fmt.Println(podfile)
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, podfile.Program.Name, "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
 }

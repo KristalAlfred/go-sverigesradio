@@ -24,8 +24,10 @@ func TestGetScheduledEpisodes(t *testing.T) {
 		}
 	}
 
+	ID := 163
+
 	channel, err := client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
-		ChannelID: 163,
+		ChannelID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},

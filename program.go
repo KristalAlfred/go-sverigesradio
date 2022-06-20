@@ -20,37 +20,37 @@ type ProgramService service
 
 // Program represents a Sveriges Radio show
 type Program struct {
-	Description     string `json:"description,omitempty"`
-	Programcategory struct {
-		ID   int    `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
+	Description     *string `json:"description,omitempty"`
+	Programcategory *struct {
+		ID   *int    `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
 	} `json:"programcategory,omitempty"`
-	Email                    string `json:"email,omitempty"`
-	Phone                    string `json:"phone,omitempty"`
-	Programurl               string `json:"programurl,omitempty"`
-	Programslug              string `json:"programslug,omitempty"`
-	Programimage             string `json:"programimage,omitempty"`
-	Programimagetemplate     string `json:"programimagetemplate,omitempty"`
-	Programimagewide         string `json:"programimagewide,omitempty"`
-	Programimagetemplatewide string `json:"programimagetemplatewide,omitempty"`
-	Socialimage              string `json:"socialimage,omitempty"`
-	Socialimagetemplate      string `json:"socialimagetemplate,omitempty"`
-	Socialmediaplatforms     []struct {
-		Platform    string `json:"platform,omitempty"`
-		Platformurl string `json:"platformurl,omitempty"`
+	Email                    *string `json:"email,omitempty"`
+	Phone                    *string `json:"phone,omitempty"`
+	Programurl               *string `json:"programurl,omitempty"`
+	Programslug              *string `json:"programslug,omitempty"`
+	Programimage             *string `json:"programimage,omitempty"`
+	Programimagetemplate     *string `json:"programimagetemplate,omitempty"`
+	Programimagewide         *string `json:"programimagewide,omitempty"`
+	Programimagetemplatewide *string `json:"programimagetemplatewide,omitempty"`
+	Socialimage              *string `json:"socialimage,omitempty"`
+	Socialimagetemplate      *string `json:"socialimagetemplate,omitempty"`
+	Socialmediaplatforms     []*struct {
+		Platform    *string `json:"platform,omitempty"`
+		Platformurl *string `json:"platformurl,omitempty"`
 	} `json:"socialmediaplatforms,omitempty"`
-	Channel struct {
-		ID   int    `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
+	Channel *struct {
+		ID   *int    `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
 	} `json:"channel,omitempty"`
-	Archived          bool   `json:"archived,omitempty"`
-	Hasondemand       bool   `json:"hasondemand,omitempty"`
-	Haspod            bool   `json:"haspod,omitempty"`
-	Responsibleeditor string `json:"responsibleeditor,omitempty"`
-	ID                int    `json:"id,omitempty"`
-	Name              string `json:"name,omitempty"`
-	Broadcastinfo     string `json:"broadcastinfo,omitempty"`
-	Payoff            string `json:"payoff,omitempty"`
+	Archived          *bool   `json:"archived,omitempty"`
+	Hasondemand       *bool   `json:"hasondemand,omitempty"`
+	Haspod            *bool   `json:"haspod,omitempty"`
+	Responsibleeditor *string `json:"responsibleeditor,omitempty"`
+	ID                *int    `json:"id,omitempty"`
+	Name              *string `json:"name,omitempty"`
+	Broadcastinfo     *string `json:"broadcastinfo,omitempty"`
+	Payoff            *string `json:"payoff,omitempty"`
 }
 
 type ProgramOptions struct {
@@ -61,8 +61,8 @@ type ProgramOptions struct {
 }
 
 type programsResponse struct {
-	Copyright string     `json:"copyright"`
-	Programs  []*Program `json:"programs"`
+	Copyright *string    `json:"copyright,omitempty"`
+	Programs  []*Program `json:"programs,omitempty"`
 }
 
 func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) ([]*Program, error) {
@@ -84,8 +84,8 @@ func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) (
 }
 
 type getProgramsResponse struct {
-	Copyright string   `json:"copyright"`
-	Program   *Program `json:"program"`
+	Copyright *string  `json:"copyright,omitempty"`
+	Program   *Program `json:"program,omitempty"`
 }
 
 func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOptions *GeneralOptions) (*Program, error) {
@@ -104,13 +104,13 @@ func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOpti
 }
 
 type ProgramCategory struct {
-	Id   int
-	Name string
+	Id   *int
+	Name *string
 }
 
 type programCategoriesResponse struct {
-	Copyright         string             `json:"copyright"`
-	ProgramCategories []*ProgramCategory `json:"programcategories"`
+	Copyright         *string            `json:"copyright,omitempty"`
+	ProgramCategories []*ProgramCategory `json:"programcategories,omitempty"`
 }
 
 func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *GeneralOptions) ([]*ProgramCategory, error) {
@@ -132,8 +132,8 @@ func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *General
 }
 
 type programCategoryResponse struct {
-	Copyright       string           `json:"copyright"`
-	ProgramCategory *ProgramCategory `json:"programcategory"`
+	Copyright       *string          `json:"copyright,omitempty"`
+	ProgramCategory *ProgramCategory `json:"programcategory,omitempty"`
 }
 
 func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt *GeneralOptions) (*ProgramCategory, error) {
@@ -152,40 +152,40 @@ func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt
 }
 
 type Broadcast struct {
-	ID               int    `json:"id"`
-	Title            string `json:"title"`
-	Description      string `json:"description"`
-	Broadcastdateutc string `json:"broadcastdateutc"`
-	Totalduration    int    `json:"totalduration"`
-	Image            string `json:"image"`
-	Imagetemplate    string `json:"imagetemplate"`
-	Availablestoputc string `json:"availablestoputc"`
-	Playlist         struct {
-		Duration       int    `json:"duration"`
-		Publishdateutc string `json:"publishdateutc"`
-		ID             int    `json:"id"`
-		URL            string `json:"url"`
-		Statkey        string `json:"statkey"`
-	} `json:"playlist"`
-	Broadcastfiles []struct {
-		Duration       int    `json:"duration"`
-		Publishdateutc string `json:"publishdateutc"`
-		ID             int    `json:"id"`
-		URL            string `json:"url"`
-		Statkey        string `json:"statkey"`
-	} `json:"broadcastfiles"`
+	ID               *int    `json:"id,omitempty"`
+	Title            *string `json:"title,omitempty"`
+	Description      *string `json:"description,omitempty"`
+	Broadcastdateutc *string `json:"broadcastdateutc,omitempty"`
+	Totalduration    *int    `json:"totalduration,omitempty"`
+	Image            *string `json:"image,omitempty"`
+	Imagetemplate    *string `json:"imagetemplate,omitempty"`
+	Availablestoputc *string `json:"availablestoputc,omitempty"`
+	Playlist         *struct {
+		Duration       *int    `json:"duration,omitempty"`
+		Publishdateutc *string `json:"publishdateutc,omitempty"`
+		ID             *int    `json:"id,omitempty"`
+		URL            *string `json:"url,omitempty"`
+		Statkey        *string `json:"statkey,omitempty"`
+	} `json:"playlist,omitempty"`
+	Broadcastfiles []*struct {
+		Duration       *int    `json:"duration,omitempty"`
+		Publishdateutc *string `json:"publishdateutc,omitempty"`
+		ID             *int    `json:"id,omitempty"`
+		URL            *string `json:"url,omitempty"`
+		Statkey        *string `json:"statkey,omitempty"`
+	} `json:"broadcastfiles,omitempty"`
 }
 
 type BroadcastOptions struct {
 	GeneralOptions
-	ProgramID int `url:"programid,omitempty"`
+	ProgramID *int `url:"programid,omitempty"`
 }
 
 type broadcastsResponse struct {
-	Description string       `json:"description"`
-	Copyright   string       `json:"copyright"`
-	Name        string       `json:"name"`
-	Broadcasts  []*Broadcast `json:"broadcasts"`
+	Description *string      `json:"description,omitempty"`
+	Copyright   *string      `json:"copyright,omitempty"`
+	Name        *string      `json:"name,omitempty"`
+	Broadcasts  []*Broadcast `json:"broadcasts,omitempty"`
 	Pagination
 }
 
@@ -208,29 +208,29 @@ func (s *ProgramService) GetProgramBroadcasts(ctx context.Context, opt *Broadcas
 }
 
 type Podfile struct {
-	Title           string `json:"title"`
-	Description     string `json:"description"`
-	Filesizeinbytes int    `json:"filesizeinbytes"`
-	Program         struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	} `json:"program"`
-	Availablefromutc string `json:"availablefromutc"`
-	Duration         int    `json:"duration"`
-	Publishdateutc   string `json:"publishdateutc"`
-	ID               int    `json:"id"`
-	URL              string `json:"url"`
-	Statkey          string `json:"statkey"`
+	Title           *string `json:"title,omitempty"`
+	Description     *string `json:"description,omitempty"`
+	Filesizeinbytes *int    `json:"filesizeinbytes,omitempty"`
+	Program         *struct {
+		ID   *int    `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
+	} `json:"program,omitempty"`
+	Availablefromutc *string `json:"availablefromutc,omitempty"`
+	Duration         *int    `json:"duration,omitempty"`
+	Publishdateutc   *string `json:"publishdateutc,omitempty"`
+	ID               *int    `json:"id,omitempty"`
+	URL              *string `json:"url,omitempty"`
+	Statkey          *string `json:"statkey,omitempty"`
 }
 
 type PodfileOptions struct {
 	GeneralOptions
-	ProgramID int `url:"programid,omitempty"`
+	ProgramID *int `url:"programid,omitempty"`
 }
 
 type podfilesResponse struct {
-	Copyright string     `json:"copyright"`
-	Podfiles  []*Podfile `json:"podfiles"`
+	Copyright *string    `json:"copyright,omitempty"`
+	Podfiles  []*Podfile `json:"podfiles,omitempty"`
 	Pagination
 }
 
@@ -253,13 +253,13 @@ func (s *ProgramService) GetProgramPodfiles(ctx context.Context, opt *PodfileOpt
 }
 
 type podfileResponse struct {
-	Copyright string   `json:"copyright,omitempty"`
+	Copyright *string  `json:"copyright,omitempty"`
 	Podfile   *Podfile `json:"podfile,omitempty"`
 }
 
 func (s *ProgramService) GetPodfileByID(ctx context.Context, id int, opt *GeneralOptions) (*Podfile, error) {
-	p := path.Join(programPodfileEndpoint, strconv.Itoa(id))
-	r, err := addOptions(p, opt)
+	endpoint := path.Join(programPodfileEndpoint, strconv.Itoa(id))
+	r, err := addOptions(endpoint, opt)
 	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
 		return nil, err

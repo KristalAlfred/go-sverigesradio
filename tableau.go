@@ -2,43 +2,39 @@ package sverigesradio
 
 import (
 	"context"
+	"fmt"
 	"path"
 )
 
-const (
-	tableauEndpoint = "scheduledepisodes"
-)
+const tableauEndpoint = "scheduledepisodes"
 
 type TableauService service
 
 type ScheduleEpisode struct {
-	Episodeid    int    `json:"episodeid"`
-	Title        string `json:"title"`
-	Description  string `json:"description"`
-	Starttimeutc string `json:"starttimeutc"`
-	Endtimeutc   string `json:"endtimeutc"`
-	Program      struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	} `json:"program"`
-	Channel struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	} `json:"channel"`
-	Imageurl         string `json:"imageurl"`
-	Imageurltemplate string `json:"imageurltemplate"`
-	Subtitle         string `json:"subtitle,omitempty"`
+	Episodeid    *int    `json:"episodeid,omitempty"`
+	Title        *string `json:"title,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	Starttimeutc *string `json:"starttimeutc,omitempty"`
+	Endtimeutc   *string `json:"endtimeutc,omitempty"`
+	Program      *struct {
+		ID   int    `json:"id,omitempty"`
+		Name string `json:"name,omitempty"`
+	} `json:"program,omitempty"`
+	Channel          *Channel `json:"channel,omitempty"`
+	Imageurl         *string  `json:"imageurl,omitempty"`
+	Imageurltemplate *string  `json:"imageurltemplate,omitempty"`
+	Subtitle         *string  `json:"subtitle,omitempty"`
 }
 
 type Schedule []*ScheduleEpisode
 
 type ScheduleOptions struct {
 	GeneralOptions
-	ChannelID int `url:"channelid,omitempty"`
+	ChannelID *int `url:"channelid,omitempty"`
 }
 
 type scheduleResponse struct {
-	Copyright  string    `json:"copyright,omitempty"`
+	Copyright  *string   `json:"copyright,omitempty"`
 	Schedule   *Schedule `json:"schedule,omitempty"`
 	Pagination `json:"pagination,omitempty"`
 }
@@ -53,6 +49,7 @@ func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *Schedule
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(req)
 
 	var resp *scheduleResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
@@ -62,7 +59,7 @@ func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *Schedule
 }
 
 type liveScheduleResponse struct {
-	Copyright  string     `json:"copyright,omitempty"`
+	Copyright  *string    `json:"copyright,omitempty"`
 	Channels   []*Channel `json:"channels,omitempty"`
 	Channel    *Channel   `json:"channel,omitempty"`
 	Pagination `json:"pagination,omitempty"`

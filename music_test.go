@@ -10,8 +10,11 @@ import (
 
 func TestGetCurrentlyPlayingSongs(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 2576
+
 	playlist, err := client.Music.GetCurrentlyPlayingSongs(context.Background(), &ChannelOptions{
-		ChannelID: 2576,
+		ChannelID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -27,10 +30,15 @@ func TestGetCurrentlyPlayingSongs(t *testing.T) {
 
 func TestGetSongsByChannelID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 3718
+	start := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
+	end := time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location())
+
 	songs, err := client.Music.GetSongsByChannelID(context.Background(), &SongsOptions{
-		ID:        164,
-		StartDate: time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location()),
-		EndDate:   time.Date(2017, 1, 1, 1, 0, 0, 0, time.Now().Location()),
+		ChannelID: &ID,
+		StartDate: &start,
+		EndDate:   &end,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -50,10 +58,14 @@ func TestGetSongsByChannelID(t *testing.T) {
 
 func TestGetSongsByProgramID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 3718
+	start := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
+	end := time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location())
 	songs, err := client.Music.GetSongsByProgramID(context.Background(), &SongsOptions{
-		ID:        3718,
-		StartDate: time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location()),
-		EndDate:   time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location()),
+		ChannelID: &ID,
+		StartDate: &start,
+		EndDate:   &end,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -73,10 +85,14 @@ func TestGetSongsByProgramID(t *testing.T) {
 
 func TestGetSongsByEpisodeID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
+
+	ID := 422962
+	start := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
+	end := time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location())
 	songs, err := client.Music.GetSongsByEpisodeID(context.Background(), &SongsOptions{
-		ID:        422962,
-		StartDate: time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location()),
-		EndDate:   time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location()),
+		ChannelID: &ID,
+		StartDate: &start,
+		EndDate:   &end,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},

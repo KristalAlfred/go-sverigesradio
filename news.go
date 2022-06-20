@@ -5,9 +5,7 @@ import (
 	"path"
 )
 
-const (
-	programNewsEndpoint = "news"
-)
+const programNewsEndpoint = "news"
 
 type NewsService service
 
