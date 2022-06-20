@@ -28,8 +28,8 @@ type Client struct {
 	// TODO: Uncomment when these exist
 	// Audio          *AudioService
 	// Channel       *ChannelService
-	Episode *EpisodeService
-	// Extrabroadcast *ExtrabroadcastService
+	Episode        *EpisodeService
+	Extrabroadcast *ExtrabroadcastService
 	// Group          *GroupService
 	Music   *MusicService
 	News    *NewsService
@@ -59,7 +59,7 @@ func NewClient(httpClient *http.Client) *Client {
 	// c.Audio = (*&AudioService)(&c.common)
 	// c.Channel = (*&ChannelService)(&c.common)
 	c.Episode = (*EpisodeService)(&c.common)
-	// c.Extrabroadcast = (*&ExtrabroadcastService)(&c.common)
+	c.Extrabroadcast = (*ExtrabroadcastService)(&c.common)
 	// c.Group = (*&GroupService)(&c.common)
 	c.Music = (*MusicService)(&c.common)
 	c.News = (*NewsService)(&c.common)
