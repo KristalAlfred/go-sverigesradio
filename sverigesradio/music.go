@@ -36,11 +36,12 @@ type ChannelOptions struct {
 	ChannelID *int `url:"channelid,omitempty"`
 }
 
-type playlistResponse struct {
-	Playlist *Playlist `json:"playlist,omitempty"`
+type PlaylistResponse struct {
+	Playlist   *Playlist `json:"playlist,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
-func (s *MusicService) GetCurrentlyPlayingSongs(ctx context.Context, opt *ChannelOptions) (*Playlist, error) {
+func (s *MusicService) GetCurrentlyPlayingSongs(ctx context.Context, opt *ChannelOptions) (*PlaylistResponse, error) {
 	endpoint := path.Join(musicEndpoint, "rightnow")
 
 	r, err := addOptions(endpoint, opt)
@@ -53,11 +54,11 @@ func (s *MusicService) GetCurrentlyPlayingSongs(ctx context.Context, opt *Channe
 		return nil, err
 	}
 
-	var resp *playlistResponse
+	var resp *PlaylistResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Playlist, nil
+	return resp, nil
 }
 
 type SongsOptions struct {

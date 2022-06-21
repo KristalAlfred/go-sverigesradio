@@ -14,7 +14,7 @@ func TestGetCurrentlyPlayingSongs(t *testing.T) {
 
 	ID := 2576
 
-	playlist, err := client.Music.GetCurrentlyPlayingSongs(context.Background(), &ChannelOptions{
+	resp, err := client.Music.GetCurrentlyPlayingSongs(context.Background(), &ChannelOptions{
 		ChannelID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -24,7 +24,7 @@ func TestGetCurrentlyPlayingSongs(t *testing.T) {
 		t.Errorf("Error occurred in GetCurrentlyPlayingSongs(), got error: %v", err)
 	}
 
-	assert.Equal(t, 2576, *playlist.Channel.ID, "Channel ID should be the same that we requested")
+	assert.Equal(t, 2576, *resp.Playlist.Channel.ID, "Channel ID should be the same that we requested")
 }
 
 func TestGetSongsByChannelID(t *testing.T) {
