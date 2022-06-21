@@ -42,8 +42,8 @@ type ExtrabroadcastOptions struct {
 }
 
 type ExtrabroadcastsResponse struct {
-	Extrabroadcasts  []*Extrabroadcast `json:"broadcasts,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Extrabroadcasts []*Extrabroadcast `json:"broadcasts,omitempty"`
+	Pagination      `json:"pagination,omitempty"`
 }
 
 func (s *ExtrabroadcastService) GetExtrabroadcasts(ctx context.Context, opt *ExtrabroadcastOptions) (*ExtrabroadcastsResponse, error) {

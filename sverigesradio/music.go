@@ -68,8 +68,8 @@ type SongsOptions struct {
 }
 
 type SongsResponse struct {
-	Songs            []*Song `json:"song,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Songs      []*Song `json:"song,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *MusicService) GetSongsByChannelID(ctx context.Context, opt *SongsOptions) (*SongsResponse, error) {

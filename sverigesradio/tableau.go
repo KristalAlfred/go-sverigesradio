@@ -34,8 +34,8 @@ type ScheduleOptions struct {
 }
 
 type ScheduleResponse struct {
-	Schedule          *Schedule `json:"schedule,omitempty"`
-	PaginationOptions `json:"pagination,omitempty"`
+	Schedule   *Schedule `json:"schedule,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *ScheduleOptions) (*ScheduleResponse, error) {
@@ -59,9 +59,9 @@ func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *Schedule
 
 // This represents the API response when querying for
 type LiveScheduleResponse struct {
-	Channels          []*Channel `json:"channels,omitempty"`
-	Channel           *Channel   `json:"channel,omitempty"`
-	PaginationOptions `json:"pagination,omitempty"`
+	Channels   []*Channel `json:"channels,omitempty"`
+	Channel    *Channel   `json:"channel,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *TableauService) GetLiveSchedule(ctx context.Context, opt *ScheduleOptions) (*LiveScheduleResponse, error) {

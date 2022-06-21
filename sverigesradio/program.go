@@ -61,13 +61,13 @@ type ProgramOptions struct {
 }
 
 type ProgramResponse struct {
-	Program          *Program `json:"program,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Program    *Program `json:"program,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 type ProgramsResponse struct {
-	Programs         []*Program `json:"programs,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Programs   []*Program `json:"programs,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) (*ProgramsResponse, error) {
@@ -110,7 +110,7 @@ type ProgramCategory struct {
 
 type ProgramCategoriesResponse struct {
 	ProgramCategories []*ProgramCategory `json:"programcategories,omitempty"`
-	PaginationResult  `json:"pagination,omitempty"`
+	Pagination        `json:"pagination,omitempty"`
 }
 
 func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *GeneralOptions) (*ProgramCategoriesResponse, error) {
@@ -132,8 +132,8 @@ func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *General
 }
 
 type ProgramCategoryResponse struct {
-	ProgramCategory  *ProgramCategory `json:"programcategory,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	ProgramCategory *ProgramCategory `json:"programcategory,omitempty"`
+	Pagination      `json:"pagination,omitempty"`
 }
 
 func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt *GeneralOptions) (*ProgramCategoryResponse, error) {
@@ -186,7 +186,7 @@ type BroadcastsResponse struct {
 	Copyright   *string      `json:"copyright,omitempty"`
 	Name        *string      `json:"name,omitempty"`
 	Broadcasts  []*Broadcast `json:"broadcasts,omitempty"`
-	PaginationResult
+	Pagination
 }
 
 func (s *ProgramService) GetProgramBroadcasts(ctx context.Context, opt *BroadcastOptions) (*BroadcastsResponse, error) {
@@ -231,7 +231,7 @@ type PodfileOptions struct {
 type PodfilesResponse struct {
 	Copyright *string    `json:"copyright,omitempty"`
 	Podfiles  []*Podfile `json:"podfiles,omitempty"`
-	PaginationResult
+	Pagination
 }
 
 func (s *ProgramService) GetProgramPodfiles(ctx context.Context, opt *PodfileOptions) (*PodfilesResponse, error) {

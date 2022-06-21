@@ -71,8 +71,8 @@ type EpisodesOptions struct {
 }
 
 type EpisodesResponse struct {
-	Episodes         []*Episode `json:"episodes,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Episodes   []*Episode `json:"episodes,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *EpisodeService) ListEpisodes(ctx context.Context, opt *EpisodesOptions) (*EpisodesResponse, error) {
@@ -102,8 +102,8 @@ type EpisodeSearchOptions struct {
 }
 
 type EpisodeSearchResponse struct {
-	Episodes         []*Episode `json:"episodes,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Episodes   []*Episode `json:"episodes,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 // Searches for episodes matching a query. The API only allows
@@ -133,8 +133,8 @@ type EpisodeOptions struct {
 }
 
 type EpisodeResponse struct {
-	Episode          *Episode `json:"episode,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Episode    *Episode `json:"episode,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*EpisodeResponse, error) {
@@ -163,8 +163,8 @@ type EpisodeListOptions struct {
 }
 
 type EpisodeListResponse struct {
-	Episodes         []*Episode `json:"episodes,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Episodes   []*Episode `json:"episodes,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *EpisodeService) GetEpisodesByID(ctx context.Context, opt *EpisodeListOptions) (*EpisodeListResponse, error) {
@@ -193,8 +193,8 @@ type LatestEpisodeOptions struct {
 }
 
 type LatestEpisodeResponse struct {
-	Episode          *Episode `json:"episode,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	Episode    *Episode `json:"episode,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisodeOptions) (*LatestEpisodeResponse, error) {
@@ -230,8 +230,8 @@ type EpisodeGroup struct {
 }
 
 type EpisodeGroupResponse struct {
-	EpisodeGroup     `json:"episodegroup,omitempty"`
-	PaginationResult `json:"pagination,omitempty"`
+	EpisodeGroup `json:"episodegroup,omitempty"`
+	Pagination   `json:"pagination,omitempty"`
 }
 
 func (s *EpisodeService) GetEpisodesByGroup(ctx context.Context, opt *EpisodeGroupOptions) (*EpisodeGroupResponse, error) {

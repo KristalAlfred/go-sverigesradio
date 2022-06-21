@@ -54,7 +54,6 @@ func TestSearchEpisode(t *testing.T) {
 		GeneralOptions: GeneralOptions{
 			Format:     JSON,
 			Pagination: false,
-			Size:       30,
 		},
 	})
 	if err != nil {
