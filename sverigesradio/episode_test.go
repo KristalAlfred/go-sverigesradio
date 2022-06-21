@@ -15,31 +15,42 @@ func TestGetEpisodes(t *testing.T) {
 
 	ID := 3718
 	from := time.Date(2021, time.December, 1, 0, 0, 0, 0, &time.Location{})
-	to := time.Date(2022, time.January, 1, 0, 0, 0, 0, &time.Location{})
-	episodes, err := client.Episode.GetEpisodes(context.Background(), &EpisodesOptions{
+	to := time.Date(2021, time.December, 1, 6, 0, 0, 0, &time.Location{})
+
+	resp, err := client.Episode.ListEpisodes(context.Background(), &EpisodesOptions{
 		ProgramID: &ID,
 		FromDate:  &from,
 		ToDate:    &to,
 		GeneralOptions: GeneralOptions{
-			Format: JSON,
+			Pagination: false,
+			Format:     JSON,
 		},
 	})
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisodes(), got error: %v", err)
 	}
-	for _, episode := range episodes {
-		fmt.Println(episode.Title)
-	}
 
-	t.Errorf("IDSDSD")
+	assert.Equal(
+		t,
+		1,
+		len(resp.Episodes),
+		"There should only be a single episode in the supplied timeslot",
+	)
+
+	assert.Equal(
+		t,
+		"Tankesmedjans Julkalender: Lucka 1",
+		*resp.Episodes[0].Title,
+		"The title of the episode should be 'Tankesmedjans Julkalender: Lucka 1'",
+	)
 }
 
 func TestSearchEpisode(t *testing.T) {
 	client := NewClient(http.DefaultClient)
 
-	query := "tankesmedjan"
+	query := "Linnea Henriksson vs. Sandro Cavazza"
 
-	episodes, err := client.Episode.SearchEpisode(context.Background(), &EpisodeSearchOptions{
+	resp, err := client.Episode.SearchEpisode(context.Background(), &EpisodeSearchOptions{
 		Query: &query,
 		GeneralOptions: GeneralOptions{
 			Format:     JSON,
@@ -50,11 +61,9 @@ func TestSearchEpisode(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in SearchEpisode(), got error: %v", err)
 	}
-	for _, episode := range episodes {
-		fmt.Println(episode.Title)
-	}
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, 1, len(resp.Episodes), "There is only 1 episode named exactly 'Linnea Henriksson vs. Sandro Cavazza'")
+	assert.Equal(t, "Linnea Henriksson vs. Sandro Cavazza", *resp.Episodes[0].Title, "Title should be 'Linnea Henriksson vs. Sandro Cavazza'")
 }
 
 func TestGetEpisode(t *testing.T) {
@@ -62,7 +71,7 @@ func TestGetEpisode(t *testing.T) {
 
 	ID := 602474
 
-	episode, err := client.Episode.GetEpisode(context.Background(), &EpisodeOptions{
+	resp, err := client.Episode.GetEpisode(context.Background(), &EpisodeOptions{
 		EpisodeID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -71,9 +80,9 @@ func TestGetEpisode(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
 	}
-	fmt.Println(episode.Title)
+	fmt.Println(*resp.Episode.Title)
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, "Historien om John Hron", *resp.Episode.Title, "Episode with ID 602474 should have title 'Historien om John Hron'")
 }
 
 func TestGetEpisodeList(t *testing.T) {
@@ -81,7 +90,7 @@ func TestGetEpisodeList(t *testing.T) {
 
 	episodeIDs := []int{697028, 681604}
 
-	episodes, err := client.Episode.GetEpisodeList(context.Background(), &EpisodeListOptions{
+	resp, err := client.Episode.GetEpisodesByID(context.Background(), &EpisodeListOptions{
 		EpisodeIDs: &episodeIDs,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -90,11 +99,13 @@ func TestGetEpisodeList(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
 	}
-	for _, episode := range episodes {
-		fmt.Println(episode.Program.Name)
+
+	for _, episode := range resp.Episodes {
+		fmt.Println(*episode.Program.Name)
 	}
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, 2, len(resp.Episodes), "We should get the two episodes with IDs corresponding with what we sent in")
+	assert.Equal(t, "Avsnitt 16: Hem, trygga hem", *resp.Episodes[0].Title, "The first returned episode should be 'Avsnitt 16: Hem, trygga hem' of program 'Creepypodden i P3'")
 }
 
 func TestLatestEpisode(t *testing.T) {
@@ -102,7 +113,7 @@ func TestLatestEpisode(t *testing.T) {
 
 	ID := 3117
 
-	episode, err := client.Episode.GetLatestEpisode(context.Background(), &LatestEpisodeOptions{
+	resp, err := client.Episode.GetLatestEpisode(context.Background(), &LatestEpisodeOptions{
 		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -111,9 +122,9 @@ func TestLatestEpisode(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
 	}
-	fmt.Println(episode.Program.Name)
+	fmt.Println(*resp.Episode.Program.Name)
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, "Karlavagnen", *resp.Episode.Program.Name, "The episode should belong to the program 'Karlavagnen' (ID 3117)")
 }
 
 func TestGetEpisodeByGroup(t *testing.T) {
@@ -121,16 +132,19 @@ func TestGetEpisodeByGroup(t *testing.T) {
 
 	ID := 23037
 
-	episodes, err := client.Episode.GetEpisodesByGroup(context.Background(), &EpisodeGroupOptions{
+	resp, err := client.Episode.GetEpisodesByGroup(context.Background(), &EpisodeGroupOptions{
 		GroupID: &ID,
 		GeneralOptions: GeneralOptions{
-			Format: JSON,
+			Format:     JSON,
+			Pagination: false,
 		},
 	})
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
 	}
-	for _, episode := range episodes {
-		assert.Equal(t, episode.Program.Name, "P1 Dokumentär", "All episodes in category 23027 should be from program P1 Dokumentär")
+
+	for _, episode := range resp.Episodes {
+		fmt.Println(*episode.ID)
+		assert.Equal(t, *episode.Program.Name, "P1 Dokumentär", "All episodes in category 23027 should be from program P1 Dokumentär")
 	}
 }
