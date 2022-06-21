@@ -12,6 +12,7 @@ const (
 	episodeEndpoint = "episodes"
 )
 
+// Represents a single episode of a program or show
 type Episode struct {
 	ID          *int    `json:"id,omitempty"`
 	Title       *string `json:"title,omitempty"`
@@ -63,11 +64,18 @@ type Episode struct {
 	} `json:"downloadpodfile,omitempty"`
 }
 
-type EpisodesOptions struct {
+// Represents
+type EpisodeOptions struct {
 	GeneralOptions
+	EpisodeID *int       `url:"id,omitempty"`
 	ProgramID *int       `url:"programid,omitempty"`
 	FromDate  *time.Time `url:"fromdate,omitempty"`
 	ToDate    *time.Time `url:"todate,omitempty"`
+}
+
+type EpisodeResponse struct {
+	Episode    *Episode `json:"episode,omitempty"`
+	Pagination `json:"pagination,omitempty"`
 }
 
 type EpisodesResponse struct {
@@ -75,7 +83,12 @@ type EpisodesResponse struct {
 	Pagination `json:"pagination,omitempty"`
 }
 
-func (s *EpisodeService) ListEpisodes(ctx context.Context, opt *EpisodesOptions) (*EpisodesResponse, error) {
+type EpisodeListOptions struct {
+	GeneralOptions
+	EpisodeIDs *[]int `url:"ids,comma,omitempty"`
+}
+
+func (s *EpisodeService) ListEpisodes(ctx context.Context, opt *EpisodeOptions) (*EpisodesResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "index")
 	r, err := addOptions(endpoint, opt)
 	if err != nil {
@@ -101,14 +114,9 @@ type EpisodeSearchOptions struct {
 	ProgramID *int    `url:"programid,omitempty"`
 }
 
-type EpisodeSearchResponse struct {
-	Episodes   []*Episode `json:"episodes,omitempty"`
-	Pagination `json:"pagination,omitempty"`
-}
-
 // Searches for episodes matching a query. The API only allows
 // a maximum return size of 25 episodes
-func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOptions) (*EpisodeSearchResponse, error) {
+func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOptions) (*EpisodesResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "search")
 	r, err := addOptions(endpoint, opt)
 	if err != nil {
@@ -120,21 +128,11 @@ func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOp
 		return nil, err
 	}
 
-	var resp *EpisodeSearchResponse
+	var resp *EpisodesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp, nil
-}
-
-type EpisodeOptions struct {
-	GeneralOptions
-	EpisodeID *int `url:"id,omitempty"`
-}
-
-type EpisodeResponse struct {
-	Episode    *Episode `json:"episode,omitempty"`
-	Pagination `json:"pagination,omitempty"`
 }
 
 func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*EpisodeResponse, error) {
@@ -157,17 +155,7 @@ func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*
 	return resp, nil
 }
 
-type EpisodeListOptions struct {
-	GeneralOptions
-	EpisodeIDs *[]int `url:"ids,comma,omitempty"`
-}
-
-type EpisodeListResponse struct {
-	Episodes   []*Episode `json:"episodes,omitempty"`
-	Pagination `json:"pagination,omitempty"`
-}
-
-func (s *EpisodeService) GetEpisodesByID(ctx context.Context, opt *EpisodeListOptions) (*EpisodeListResponse, error) {
+func (s *EpisodeService) GetEpisodesByID(ctx context.Context, opt *EpisodeListOptions) (*EpisodesResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "getlist")
 
 	r, err := addOptions(endpoint, opt)
@@ -180,24 +168,14 @@ func (s *EpisodeService) GetEpisodesByID(ctx context.Context, opt *EpisodeListOp
 		return nil, err
 	}
 
-	var resp *EpisodeListResponse
+	var resp *EpisodesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
 	return resp, nil
 }
 
-type LatestEpisodeOptions struct {
-	GeneralOptions
-	ProgramID *int `url:"programid,omitempty"`
-}
-
-type LatestEpisodeResponse struct {
-	Episode    *Episode `json:"episode,omitempty"`
-	Pagination `json:"pagination,omitempty"`
-}
-
-func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisodeOptions) (*LatestEpisodeResponse, error) {
+func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *EpisodeOptions) (*EpisodeResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "getlatest")
 
 	r, err := addOptions(endpoint, opt)
@@ -210,7 +188,7 @@ func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisod
 		return nil, err
 	}
 
-	var resp *LatestEpisodeResponse
+	var resp *EpisodeResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}

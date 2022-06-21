@@ -20,10 +20,10 @@ type ScheduleEpisode struct {
 		ID   int    `json:"id,omitempty"`
 		Name string `json:"name,omitempty"`
 	} `json:"program,omitempty"`
-	Channel          *Channel `json:"channel,omitempty"`
-	Imageurl         *string  `json:"imageurl,omitempty"`
-	Imageurltemplate *string  `json:"imageurltemplate,omitempty"`
-	Subtitle         *string  `json:"subtitle,omitempty"`
+	Channel          *ChannelSchedule `json:"channel,omitempty"`
+	Imageurl         *string          `json:"imageurl,omitempty"`
+	Imageurltemplate *string          `json:"imageurltemplate,omitempty"`
+	Subtitle         *string          `json:"subtitle,omitempty"`
 }
 
 type Schedule []*ScheduleEpisode
@@ -59,8 +59,8 @@ func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *Schedule
 
 // This represents the API response when querying for
 type LiveScheduleResponse struct {
-	Channels   []*Channel `json:"channels,omitempty"`
-	Channel    *Channel   `json:"channel,omitempty"`
+	Channels   []*ChannelSchedule `json:"channels,omitempty"`
+	Channel    *ChannelSchedule   `json:"channel,omitempty"`
 	Pagination `json:"pagination,omitempty"`
 }
 

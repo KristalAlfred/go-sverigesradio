@@ -16,7 +16,7 @@ func TestGetEpisodes(t *testing.T) {
 	from := time.Date(2021, time.December, 1, 0, 0, 0, 0, &time.Location{})
 	to := time.Date(2021, time.December, 1, 6, 0, 0, 0, &time.Location{})
 
-	resp, err := client.Episode.ListEpisodes(context.Background(), &EpisodesOptions{
+	resp, err := client.Episode.ListEpisodes(context.Background(), &EpisodeOptions{
 		ProgramID: &ID,
 		FromDate:  &from,
 		ToDate:    &to,
@@ -106,7 +106,7 @@ func TestLatestEpisode(t *testing.T) {
 
 	ID := 3117
 
-	resp, err := client.Episode.GetLatestEpisode(context.Background(), &LatestEpisodeOptions{
+	resp, err := client.Episode.GetLatestEpisode(context.Background(), &EpisodeOptions{
 		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,

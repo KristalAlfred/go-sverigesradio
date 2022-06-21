@@ -30,6 +30,7 @@ type GeneralOptions struct {
 	Format Format `url:"format,omitempty"`
 }
 
+// Represents pagination information from the API
 type Pagination struct {
 	// Specifies the desired page number, given Size
 	// Default: 1
@@ -44,8 +45,8 @@ type Pagination struct {
 	PreviousPage *string `json:"previouspage,omitempty"`
 }
 
-// Represents the
-type Channel struct {
+// Represents the current schedule for a channel
+type ChannelSchedule struct {
 	ID                       *int     `json:"id,omitempty"`
 	Name                     *string  `json:"name,omitempty"`
 	PreviousScheduledEpisode *Episode `json:"previousscheduledepisode,omitempty"`

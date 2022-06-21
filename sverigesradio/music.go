@@ -25,10 +25,10 @@ type Song struct {
 }
 
 type Playlist struct {
-	Previoussong *Song    `json:"previoussong,omitempty"`
-	Song         *Song    `json:"song,omitempty"`
-	NextSong     *Song    `json:"nextsong,omitempty"`
-	Channel      *Channel `json:"channel,omitempty"`
+	Previoussong *Song            `json:"previoussong,omitempty"`
+	Song         *Song            `json:"song,omitempty"`
+	NextSong     *Song            `json:"nextsong,omitempty"`
+	Channel      *ChannelSchedule `json:"channel,omitempty"`
 }
 
 type ChannelOptions struct {
