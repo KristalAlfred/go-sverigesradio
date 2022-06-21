@@ -59,8 +59,9 @@ type PaginationResult struct {
 	PreviousPage *string `json:"previouspage,omitempty"`
 }
 
+// Represents the
 type Channel struct {
-	Id                       *int     `json:"id,omitempty"`
+	ID                       *int     `json:"id,omitempty"`
 	Name                     *string  `json:"name,omitempty"`
 	PreviousScheduledEpisode *Episode `json:"previousscheduledepisode,omitempty"`
 	CurrentScheduledEpisode  *Episode `json:"currentscheduledepisode,omitempty"`

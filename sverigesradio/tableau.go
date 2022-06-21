@@ -33,13 +33,12 @@ type ScheduleOptions struct {
 	ChannelID *int `url:"channelid,omitempty"`
 }
 
-type scheduleResponse struct {
-	Copyright  *string   `json:"copyright,omitempty"`
-	Schedule   *Schedule `json:"schedule,omitempty"`
-	Pagination `json:"pagination,omitempty"`
+type ScheduleResponse struct {
+	Schedule          *Schedule `json:"schedule,omitempty"`
+	PaginationOptions `json:"pagination,omitempty"`
 }
 
-func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *ScheduleOptions) (*Schedule, error) {
+func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *ScheduleOptions) (*ScheduleResponse, error) {
 	r, err := addOptions(tableauEndpoint, opt)
 	if err != nil {
 		return nil, err
@@ -51,21 +50,21 @@ func (s *TableauService) GetScheduledEpisodes(ctx context.Context, opt *Schedule
 	}
 	fmt.Println(req)
 
-	var resp *scheduleResponse
+	var resp *ScheduleResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Schedule, nil
+	return resp, nil
 }
 
-type liveScheduleResponse struct {
-	Copyright  *string    `json:"copyright,omitempty"`
-	Channels   []*Channel `json:"channels,omitempty"`
-	Channel    *Channel   `json:"channel,omitempty"`
-	Pagination `json:"pagination,omitempty"`
+// This represents the API response when querying for
+type LiveScheduleResponse struct {
+	Channels          []*Channel `json:"channels,omitempty"`
+	Channel           *Channel   `json:"channel,omitempty"`
+	PaginationOptions `json:"pagination,omitempty"`
 }
 
-func (s *TableauService) GetLiveSchedule(ctx context.Context, opt *ScheduleOptions) ([]*Channel, error) {
+func (s *TableauService) GetLiveSchedule(ctx context.Context, opt *ScheduleOptions) (*LiveScheduleResponse, error) {
 	endpoint := path.Join(tableauEndpoint, "rightnow")
 	r, err := addOptions(endpoint, opt)
 	if err != nil {
@@ -77,13 +76,10 @@ func (s *TableauService) GetLiveSchedule(ctx context.Context, opt *ScheduleOptio
 		return nil, err
 	}
 
-	var resp *liveScheduleResponse
+	var resp *LiveScheduleResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	if resp.Channels != nil {
-		return resp.Channels, nil
-	} else {
-		return []*Channel{resp.Channel}, nil
-	}
+
+	return resp, nil
 }

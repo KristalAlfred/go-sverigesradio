@@ -2,14 +2,15 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetScheduledEpisodes(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	channels, err := client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
+	resp, err := client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -18,15 +19,11 @@ func TestGetScheduledEpisodes(t *testing.T) {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
 
-	for _, channel := range channels {
-		if channel.CurrentScheduledEpisode != nil {
-			fmt.Println(channel.CurrentScheduledEpisode.Title)
-		}
-	}
+	assert.Equal(t, true, len(resp.Channels) > 30, "Listing all channels live schedules should render a schedule for every Sveriges Radio channel, which is at least 30")
 
-	ID := 163
+	ID := 164
 
-	channel, err := client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
+	resp, err = client.Tableau.GetLiveSchedule(context.Background(), &ScheduleOptions{
 		ChannelID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
@@ -35,10 +32,5 @@ func TestGetScheduledEpisodes(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
-
-	fmt.Println(channel[0].CurrentScheduledEpisode.Title)
-
-	t.Errorf("heyo")
-
-	// assert.Equal(t, podfile.Program.Name, "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
+	assert.Equal(t, "P3", *resp.Channel.Name, "Channel ID 164 belongs to P3")
 }

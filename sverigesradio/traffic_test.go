@@ -2,16 +2,17 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetArea(t *testing.T) {
 	client := NewClient(http.DefaultClient)
 
 	lat, long := 60.0, 12.0
-	area, err := client.Traffic.GetArea(context.Background(), &TrafficAreaOptions{
+	resp, err := client.Traffic.GetArea(context.Background(), &TrafficAreaOptions{
 		Latitude:  &lat,
 		Longitude: &long,
 		GeneralOptions: GeneralOptions{
@@ -22,21 +23,17 @@ func TestGetArea(t *testing.T) {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
 
-	fmt.Println(area.Name)
-	t.Errorf("Yo")
+	assert.Equal(t, "Värmland", *resp.Area.Name, "The area for the supplied coordinates should be Värmland")
 }
 
 func TestGetAreas(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	areas, err := client.Traffic.GetAreas(context.Background(), &GeneralOptions{
+	resp, err := client.Traffic.GetAreas(context.Background(), &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
 
-	for _, area := range areas {
-		fmt.Println(area.Name)
-	}
-	t.Errorf("Yo")
+	assert.Equal(t, 25, len(resp.Areas), "There should be 25 traffic areas")
 }
