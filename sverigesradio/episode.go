@@ -70,13 +70,12 @@ type EpisodesOptions struct {
 	ToDate    *time.Time `url:"todate,omitempty"`
 }
 
-type episodesResponse struct {
-	Copyright *string `json:"copyright,omitempty"`
-	Episodes  []*Episode
-	Pagination
+type EpisodesResponse struct {
+	Episodes         []*Episode `json:"episodes,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodesOptions) ([]*Episode, error) {
+func (s *EpisodeService) ListEpisodes(ctx context.Context, opt *EpisodesOptions) (*EpisodesResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "index")
 	r, err := addOptions(endpoint, opt)
 	if err != nil {
@@ -88,29 +87,28 @@ func (s *EpisodeService) GetEpisodes(ctx context.Context, opt *EpisodesOptions) 
 		return nil, err
 	}
 
-	var resp *episodesResponse
+	var resp *EpisodesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Episodes, nil
+	return resp, nil
 }
 
 type EpisodeSearchOptions struct {
 	GeneralOptions
-	Query     *string
-	ChannelID *int
-	ProgramID *int
+	Query     *string `url:"query,omitempty"`
+	ChannelID *int    `url:"channelid,omitempty"`
+	ProgramID *int    `url:"programid,omitempty"`
 }
 
-type episodeSearchResponse struct {
-	Copyright  *string    `json:"copyright,omitempty"`
-	Episodes   []*Episode `json:"episodes,omitempty"`
-	Pagination `json:"pagination,omitempty"`
+type EpisodeSearchResponse struct {
+	Episodes         []*Episode `json:"episodes,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
 // Searches for episodes matching a query. The API only allows
 // a maximum return size of 25 episodes
-func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOptions) ([]*Episode, error) {
+func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOptions) (*EpisodeSearchResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "search")
 	r, err := addOptions(endpoint, opt)
 	if err != nil {
@@ -122,11 +120,11 @@ func (s *EpisodeService) SearchEpisode(ctx context.Context, opt *EpisodeSearchOp
 		return nil, err
 	}
 
-	var resp *episodesResponse
+	var resp *EpisodeSearchResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Episodes, nil
+	return resp, nil
 }
 
 type EpisodeOptions struct {
@@ -134,12 +132,12 @@ type EpisodeOptions struct {
 	EpisodeID *int `url:"id,omitempty"`
 }
 
-type episodeResponse struct {
-	Copyright *string  `json:"copyright,omitempty"`
-	Episode   *Episode `json:"episode,omitempty"`
+type EpisodeResponse struct {
+	Episode          *Episode `json:"episode,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*Episode, error) {
+func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*EpisodeResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "get")
 
 	r, err := addOptions(endpoint, opt)
@@ -152,11 +150,11 @@ func (s *EpisodeService) GetEpisode(ctx context.Context, opt *EpisodeOptions) (*
 		return nil, err
 	}
 
-	var resp *episodeResponse
+	var resp *EpisodeResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Episode, nil
+	return resp, nil
 }
 
 type EpisodeListOptions struct {
@@ -164,13 +162,12 @@ type EpisodeListOptions struct {
 	EpisodeIDs *[]int `url:"ids,comma,omitempty"`
 }
 
-type episodeListResponse struct {
-	Copyright *string    `json:"copyright,omitempty"`
-	Episodes  []*Episode `json:"episodes,omitempty"`
-	Pagination
+type EpisodeListResponse struct {
+	Episodes         []*Episode `json:"episodes,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *EpisodeService) GetEpisodeList(ctx context.Context, opt *EpisodeListOptions) ([]*Episode, error) {
+func (s *EpisodeService) GetEpisodesByID(ctx context.Context, opt *EpisodeListOptions) (*EpisodeListResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "getlist")
 
 	r, err := addOptions(endpoint, opt)
@@ -183,11 +180,11 @@ func (s *EpisodeService) GetEpisodeList(ctx context.Context, opt *EpisodeListOpt
 		return nil, err
 	}
 
-	var resp *episodeListResponse
+	var resp *EpisodeListResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Episodes, nil
+	return resp, nil
 }
 
 type LatestEpisodeOptions struct {
@@ -195,12 +192,12 @@ type LatestEpisodeOptions struct {
 	ProgramID *int `url:"programid,omitempty"`
 }
 
-type latestEpisodeResponse struct {
-	Copyright *string  `json:"copyright,omitempty"`
-	Episode   *Episode `json:"episode,omitempty"`
+type LatestEpisodeResponse struct {
+	Episode          *Episode `json:"episode,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisodeOptions) (*Episode, error) {
+func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisodeOptions) (*LatestEpisodeResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "getlatest")
 
 	r, err := addOptions(endpoint, opt)
@@ -213,11 +210,11 @@ func (s *EpisodeService) GetLatestEpisode(ctx context.Context, opt *LatestEpisod
 		return nil, err
 	}
 
-	var resp *latestEpisodeResponse
+	var resp *LatestEpisodeResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Episode, nil
+	return resp, nil
 }
 
 type EpisodeGroupOptions struct {
@@ -232,13 +229,12 @@ type EpisodeGroup struct {
 	Episodes    []*Episode `json:"episodes,omitempty"`
 }
 
-type episodeGroupResponse struct {
-	Copyright    *string `json:"copyright,omitempty"`
-	EpisodeGroup `json:"episodegroup,omitempty"`
-	Pagination
+type EpisodeGroupResponse struct {
+	EpisodeGroup     `json:"episodegroup,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *EpisodeService) GetEpisodesByGroup(ctx context.Context, opt *EpisodeGroupOptions) ([]*Episode, error) {
+func (s *EpisodeService) GetEpisodesByGroup(ctx context.Context, opt *EpisodeGroupOptions) (*EpisodeGroupResponse, error) {
 	endpoint := path.Join(episodeEndpoint, "group")
 
 	r, err := addOptions(endpoint, opt)
@@ -251,9 +247,9 @@ func (s *EpisodeService) GetEpisodesByGroup(ctx context.Context, opt *EpisodeGro
 		return nil, err
 	}
 
-	var resp *episodeGroupResponse
+	var resp *EpisodeGroupResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Episodes, nil
+	return resp, nil
 }

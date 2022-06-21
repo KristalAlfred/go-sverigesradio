@@ -20,7 +20,7 @@ const (
 type GeneralOptions struct {
 	// Activate pagination when set to true
 	// Default: true
-	Pagination bool `url:"pagination,omitempty"`
+	Pagination bool `url:"pagination"`
 
 	// Set the maximum number of elements returned
 	// Default: 10
@@ -36,16 +36,27 @@ type GeneralOptions struct {
 	Format Format `url:"format,omitempty"`
 }
 
-type Pagination struct {
+type PaginationOptions struct {
 	// Activate pagination when set to true
 	// Default: true
 	Page int `json:"page,omitempty"`
 
 	// Set the maximum number of elements returned
 	// Default: 10
-	Size       int `json:"size,omitempty"`
-	Totalhits  int `json:"totalhits,omitempty"`
-	Totalpages int `json:"totalpages,omitempty"`
+	Size         int     `json:"size,omitempty"`
+	Totalhits    int     `json:"totalhits,omitempty"`
+	Totalpages   int     `json:"totalpages,omitempty"`
+	NextPage     *string `json:"nextpage,omitempty"`
+	PreviousPage *string `json:"previouspage,omitempty"`
+}
+
+type PaginationResult struct {
+	Page         *int    `json:"page,omitempty"`
+	Size         *int    `json:"size,omitempty"`
+	TotalHits    *int    `json:"totalhits,omitempty"`
+	TotalPages   *int    `json:"totalpages,omitempty"`
+	NextPage     *string `json:"nextpage,omitempty"`
+	PreviousPage *string `json:"previouspage,omitempty"`
 }
 
 type Channel struct {
