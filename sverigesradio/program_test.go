@@ -2,16 +2,15 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListAllPrograms(t *testing.T) {
+func TestGetPrograms(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	programs, err := client.Program.GetPrograms(context.Background(), &ProgramOptions{
+	resp, err := client.Program.GetPrograms(context.Background(), &ProgramOptions{
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -20,105 +19,88 @@ func TestListAllPrograms(t *testing.T) {
 		t.Errorf("Error occured in ListAllPrograms(), got error: %v", err)
 	}
 
-	for _, program := range programs {
-		fmt.Println(program.Name)
-	}
-
-	t.Errorf("heyo")
+	assert.Equal(t, true, len(resp.Programs) > 200, "The method should return a large list of programs")
 }
 
-func TestFindProgramByID(t *testing.T) {
+func TestGetProgramByID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	program, err := client.Program.GetProgramByID(context.Background(), 1120, &GeneralOptions{
+	id := 1120
+	resp, err := client.Program.GetProgramByID(context.Background(), id, &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
 		t.Errorf("Error occured in GetProgramByID(), got error: %v", err)
 	}
-	fmt.Println(program, err)
-	t.Errorf("hsajdaksd")
+
+	assert.Equal(t, id, *resp.Program.ID, "ID received should match the input")
 }
 
-func TestListAllProgramCategories(t *testing.T) {
+func TestListProgramCategories(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	programCategories, err := client.Program.ListProgramCategories(context.Background(), &GeneralOptions{
+	resp, err := client.Program.ListProgramCategories(context.Background(), &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
 		t.Errorf("Error occurred in ListAllProgramCategories(), got error: %v", err)
 	}
 
-	for _, category := range programCategories {
-		fmt.Println(category.Name)
-	}
-	t.Errorf("HEYO! :D")
+	assert.Equal(t, "Ekonomi", *resp.ProgramCategories[4].Name, "The fifth category name should be 'Ekonomi'")
 }
 
 func TestGetProgramCategoryByID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	programCategory, err := client.Program.GetProgramCategoryByID(context.Background(), 2, &GeneralOptions{
+	resp, err := client.Program.GetProgramCategoryByID(context.Background(), 5, &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
 		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
 	}
-	fmt.Println(programCategory)
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, "Musik", *resp.ProgramCategory.Name, "Category with ID 5 should be 'Musik'")
 }
 
-func TestGetAllBroadcasts(t *testing.T) {
+func TestGetBroadcasts(t *testing.T) {
 	client := NewClient(http.DefaultClient)
 
 	ID := 3718
 
-	broadcasts, err := client.Program.GetProgramBroadcasts(context.Background(), &BroadcastOptions{
+	_, err := client.Program.GetProgramBroadcasts(context.Background(), &BroadcastOptions{
 		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+		t.Errorf("Error occurred in GetGetAllBroadcasts(), got error: %v", err)
 	}
-	for _, broadcast := range broadcasts {
-		for _, broadcastfile := range broadcast.Broadcastfiles {
-			fmt.Println(broadcastfile.URL)
-		}
-	}
-
-	t.Errorf("IDSDSD")
 }
 
-func TestGetAllProgramPodfiles(t *testing.T) {
+func TestGetProgramPodfiles(t *testing.T) {
 	client := NewClient(http.DefaultClient)
 
 	ID := 3117
 
-	podfiles, err := client.Program.GetProgramPodfiles(context.Background(), &PodfileOptions{
+	resp, err := client.Program.GetProgramPodfiles(context.Background(), &PodfileOptions{
 		ProgramID: &ID,
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
-	}
-	for _, podfile := range podfiles {
-		fmt.Println(podfile.Title)
+		t.Errorf("Error occurred in GetAllProgramPodfiles(), got error: %v", err)
 	}
 
-	t.Errorf("IDSDSD")
+	assert.Equal(t, true, len(resp.Podfiles) > 200, "There should be at least 200 podfiles for Karlavagnen")
 }
 
 func TestGetPodfileByID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	podfile, err := client.Program.GetPodfileByID(context.Background(), 4126279, &GeneralOptions{
+	resp, err := client.Program.GetPodfileByID(context.Background(), 4126279, &GeneralOptions{
 		Format: JSON,
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetProgramCategoryByID(), got error: %v", err)
+		t.Errorf("Error occurred in GetPodfileByID(), got error: %v", err)
 	}
 
-	assert.Equal(t, podfile.Program.Name, "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
+	assert.Equal(t, *resp.Podfile.Program.Name, "Karlavagnen", "Podfile with ID 4126279 is a podfile from the show Karlavagnen")
 }

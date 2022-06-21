@@ -60,12 +60,17 @@ type ProgramOptions struct {
 	IsArchived        *bool `url:"isarchived,omitempty"`
 }
 
-type programsResponse struct {
-	Copyright *string    `json:"copyright,omitempty"`
-	Programs  []*Program `json:"programs,omitempty"`
+type ProgramResponse struct {
+	Program          *Program `json:"program,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) ([]*Program, error) {
+type ProgramsResponse struct {
+	Programs         []*Program `json:"programs,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
+}
+
+func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) (*ProgramsResponse, error) {
 	r, err := addOptions(programEndpoint, opt)
 	if err != nil {
 		return nil, err
@@ -76,19 +81,14 @@ func (s *ProgramService) GetPrograms(ctx context.Context, opt *ProgramOptions) (
 		return nil, err
 	}
 
-	var resp *programsResponse
+	var resp *ProgramsResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Programs, nil
+	return resp, nil
 }
 
-type getProgramsResponse struct {
-	Copyright *string  `json:"copyright,omitempty"`
-	Program   *Program `json:"program,omitempty"`
-}
-
-func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOptions *GeneralOptions) (*Program, error) {
+func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOptions *GeneralOptions) (*ProgramResponse, error) {
 	p := path.Join(programEndpoint, strconv.Itoa(id))
 	r, err := addOptions(p, generalOptions)
 	req, err := s.client.NewRequest("GET", r, nil)
@@ -96,11 +96,11 @@ func (s *ProgramService) GetProgramByID(ctx context.Context, id int, generalOpti
 		return nil, err
 	}
 
-	var resp *getProgramsResponse
+	var resp *ProgramResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Program, nil
+	return resp, nil
 }
 
 type ProgramCategory struct {
@@ -108,13 +108,13 @@ type ProgramCategory struct {
 	Name *string
 }
 
-type programCategoriesResponse struct {
-	Copyright         *string            `json:"copyright,omitempty"`
+type ProgramCategoriesResponse struct {
 	ProgramCategories []*ProgramCategory `json:"programcategories,omitempty"`
+	PaginationResult  `json:"pagination,omitempty"`
 }
 
-func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *GeneralOptions) ([]*ProgramCategory, error) {
-	r, err := addOptions(programEndpoint, opt)
+func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *GeneralOptions) (*ProgramCategoriesResponse, error) {
+	r, err := addOptions(programCategoryEndpoint, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -124,19 +124,19 @@ func (s *ProgramService) ListProgramCategories(ctx context.Context, opt *General
 		return nil, err
 	}
 
-	var resp *programCategoriesResponse
+	var resp *ProgramCategoriesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.ProgramCategories, nil
+	return resp, nil
 }
 
-type programCategoryResponse struct {
-	Copyright       *string          `json:"copyright,omitempty"`
-	ProgramCategory *ProgramCategory `json:"programcategory,omitempty"`
+type ProgramCategoryResponse struct {
+	ProgramCategory  *ProgramCategory `json:"programcategory,omitempty"`
+	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt *GeneralOptions) (*ProgramCategory, error) {
+func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt *GeneralOptions) (*ProgramCategoryResponse, error) {
 	p := path.Join(programCategoryEndpoint, strconv.Itoa(id))
 	r, err := addOptions(p, opt)
 	req, err := s.client.NewRequest("GET", r, nil)
@@ -144,11 +144,11 @@ func (s *ProgramService) GetProgramCategoryByID(ctx context.Context, id int, opt
 		return nil, err
 	}
 
-	var resp *programCategoryResponse
+	var resp *ProgramCategoryResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.ProgramCategory, nil
+	return resp, nil
 }
 
 type Broadcast struct {
@@ -181,15 +181,15 @@ type BroadcastOptions struct {
 	ProgramID *int `url:"programid,omitempty"`
 }
 
-type broadcastsResponse struct {
+type BroadcastsResponse struct {
 	Description *string      `json:"description,omitempty"`
 	Copyright   *string      `json:"copyright,omitempty"`
 	Name        *string      `json:"name,omitempty"`
 	Broadcasts  []*Broadcast `json:"broadcasts,omitempty"`
-	Pagination
+	PaginationResult
 }
 
-func (s *ProgramService) GetProgramBroadcasts(ctx context.Context, opt *BroadcastOptions) ([]*Broadcast, error) {
+func (s *ProgramService) GetProgramBroadcasts(ctx context.Context, opt *BroadcastOptions) (*BroadcastsResponse, error) {
 	r, err := addOptions(programBroadcastEndpoint, opt)
 	if err != nil {
 		return nil, err
@@ -200,11 +200,11 @@ func (s *ProgramService) GetProgramBroadcasts(ctx context.Context, opt *Broadcas
 		return nil, err
 	}
 
-	var resp *broadcastsResponse
+	var resp *BroadcastsResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Broadcasts, nil
+	return resp, nil
 }
 
 type Podfile struct {
@@ -228,13 +228,13 @@ type PodfileOptions struct {
 	ProgramID *int `url:"programid,omitempty"`
 }
 
-type podfilesResponse struct {
+type PodfilesResponse struct {
 	Copyright *string    `json:"copyright,omitempty"`
 	Podfiles  []*Podfile `json:"podfiles,omitempty"`
-	Pagination
+	PaginationResult
 }
 
-func (s *ProgramService) GetProgramPodfiles(ctx context.Context, opt *PodfileOptions) ([]*Podfile, error) {
+func (s *ProgramService) GetProgramPodfiles(ctx context.Context, opt *PodfileOptions) (*PodfilesResponse, error) {
 	r, err := addOptions(programPodfileEndpoint, opt)
 	if err != nil {
 		return nil, err
@@ -245,19 +245,19 @@ func (s *ProgramService) GetProgramPodfiles(ctx context.Context, opt *PodfileOpt
 		return nil, err
 	}
 
-	var resp *podfilesResponse
+	var resp *PodfilesResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Podfiles, nil
+	return resp, nil
 }
 
-type podfileResponse struct {
+type PodfileResponse struct {
 	Copyright *string  `json:"copyright,omitempty"`
 	Podfile   *Podfile `json:"podfile,omitempty"`
 }
 
-func (s *ProgramService) GetPodfileByID(ctx context.Context, id int, opt *GeneralOptions) (*Podfile, error) {
+func (s *ProgramService) GetPodfileByID(ctx context.Context, id int, opt *GeneralOptions) (*PodfileResponse, error) {
 	endpoint := path.Join(programPodfileEndpoint, strconv.Itoa(id))
 	r, err := addOptions(endpoint, opt)
 	req, err := s.client.NewRequest("GET", r, nil)
@@ -265,9 +265,9 @@ func (s *ProgramService) GetPodfileByID(ctx context.Context, id int, opt *Genera
 		return nil, err
 	}
 
-	var resp *podfileResponse
+	var resp *PodfileResponse
 	if _, err := s.client.Do(ctx, req, &resp); err != nil {
 		return nil, err
 	}
-	return resp.Podfile, nil
+	return resp, nil
 }
