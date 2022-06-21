@@ -27,7 +27,7 @@ func TestGetEpisodes(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetEpisodes(), got error: %v", err)
+		t.Errorf("Error occurred in ListEpisodes(), got error: %v", err)
 	}
 
 	assert.Equal(
@@ -97,7 +97,7 @@ func TestGetEpisodeList(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
+		t.Errorf("Error occurred in GetEpisodesByID(), got error: %v", err)
 	}
 
 	for _, episode := range resp.Episodes {
@@ -120,7 +120,7 @@ func TestLatestEpisode(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
+		t.Errorf("Error occurred in GetLatestEpisode(), got error: %v", err)
 	}
 	fmt.Println(*resp.Episode.Program.Name)
 
@@ -140,7 +140,7 @@ func TestGetEpisodeByGroup(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
+		t.Errorf("Error occurred in GetEpisodesByGroup(), got error: %v", err)
 	}
 
 	for _, episode := range resp.Episodes {
