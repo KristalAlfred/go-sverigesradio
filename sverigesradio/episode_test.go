@@ -2,7 +2,6 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -80,7 +79,6 @@ func TestGetEpisode(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
 	}
-	fmt.Println(*resp.Episode.Title)
 
 	assert.Equal(t, "Historien om John Hron", *resp.Episode.Title, "Episode with ID 602474 should have title 'Historien om John Hron'")
 }
@@ -98,10 +96,6 @@ func TestGetEpisodeList(t *testing.T) {
 	})
 	if err != nil {
 		t.Errorf("Error occurred in GetEpisodesByID(), got error: %v", err)
-	}
-
-	for _, episode := range resp.Episodes {
-		fmt.Println(*episode.Program.Name)
 	}
 
 	assert.Equal(t, 2, len(resp.Episodes), "We should get the two episodes with IDs corresponding with what we sent in")
@@ -122,7 +116,6 @@ func TestLatestEpisode(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetLatestEpisode(), got error: %v", err)
 	}
-	fmt.Println(*resp.Episode.Program.Name)
 
 	assert.Equal(t, "Karlavagnen", *resp.Episode.Program.Name, "The episode should belong to the program 'Karlavagnen' (ID 3117)")
 }
@@ -144,7 +137,6 @@ func TestGetEpisodeByGroup(t *testing.T) {
 	}
 
 	for _, episode := range resp.Episodes {
-		fmt.Println(*episode.ID)
 		assert.Equal(t, *episode.Program.Name, "P1 Dokumentär", "All episodes in category 23027 should be from program P1 Dokumentär")
 	}
 }
