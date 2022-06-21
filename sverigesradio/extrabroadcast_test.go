@@ -2,14 +2,15 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetExtraBroadcasts(t *testing.T) {
 	client := NewClient(http.DefaultClient)
-	broadcasts, err := client.Extrabroadcast.GetExtraBroadcasts(context.Background(), &ExtrabroadcastOptions{
+	resp, err := client.Extrabroadcast.GetExtraBroadcasts(context.Background(), &ExtrabroadcastOptions{
 		GeneralOptions: GeneralOptions{
 			Format: JSON,
 		},
@@ -18,9 +19,5 @@ func TestGetExtraBroadcasts(t *testing.T) {
 		t.Errorf("Error occurred in GetEpisode(), got error: %v", err)
 	}
 
-	for _, broadcast := range broadcasts {
-		fmt.Println(broadcast)
-	}
-
-	t.Errorf("HEO")
+	assert.Equal(t, "P4 Plus", resp.Extrabroadcasts[0].Name, "P4 Plus should be the first extrabroadcast")
 }
