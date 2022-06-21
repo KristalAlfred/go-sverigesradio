@@ -46,7 +46,7 @@ type ExtrabroadcastsResponse struct {
 	PaginationResult `json:"pagination,omitempty"`
 }
 
-func (s *ExtrabroadcastService) GetExtraBroadcasts(ctx context.Context, opt *ExtrabroadcastOptions) (*ExtrabroadcastsResponse, error) {
+func (s *ExtrabroadcastService) GetExtrabroadcasts(ctx context.Context, opt *ExtrabroadcastOptions) (*ExtrabroadcastsResponse, error) {
 	r, err := addOptions(extrabroadcastEndpoint, opt)
 	req, err := s.client.NewRequest("GET", r, nil)
 	if err != nil {
