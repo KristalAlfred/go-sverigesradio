@@ -2,10 +2,11 @@ package sverigesradio
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetCurrentlyPlayingSongs(t *testing.T) {
@@ -22,20 +23,18 @@ func TestGetCurrentlyPlayingSongs(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error occurred in GetCurrentlyPlayingSongs(), got error: %v", err)
 	}
-	fmt.Println(playlist)
-	t.Errorf("test..")
 
-	//	assert.Equal(t, , "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
+	assert.Equal(t, 2576, *playlist.Channel.ID, "Channel ID should be the same that we requested")
 }
 
 func TestGetSongsByChannelID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
 
-	ID := 3718
-	start := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
-	end := time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location())
+	ID := 164
+	start := time.Date(2017, 1, 1, 0, 13, 0, 0, time.Now().Location())
+	end := time.Date(2017, 1, 1, 0, 15, 0, 0, time.Now().Location())
 
-	songs, err := client.Music.GetSongsByChannelID(context.Background(), &SongsOptions{
+	resp, err := client.Music.GetSongsByChannelID(context.Background(), &SongsOptions{
 		ChannelID: &ID,
 		StartDate: &start,
 		EndDate:   &end,
@@ -44,25 +43,20 @@ func TestGetSongsByChannelID(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetCurrentlyPlayingSongs(), got error: %v", err)
+		t.Errorf("Error occurred in GetSongsByChannelID(), got error: %v", err)
 	}
 
-	for _, song := range songs {
-		fmt.Println(song.Title)
-	}
-
-	t.Errorf("test..")
-
-	//	assert.Equal(t, , "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
+	assert.Equal(t, 1, len(resp.Songs), "Only 1 played at the specified date in the specified channel (P3)")
+	assert.Equal(t, "Simple Minds", *resp.Songs[0].Artist, "The artist should be 'Simple Minds'")
 }
 
 func TestGetSongsByProgramID(t *testing.T) {
 	client := NewClient(http.DefaultClient)
 
 	ID := 3718
-	start := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
-	end := time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location())
-	songs, err := client.Music.GetSongsByProgramID(context.Background(), &SongsOptions{
+	start := time.Date(2017, 1, 2, 16, 0, 0, 0, time.Now().Location())
+	end := time.Date(2017, 1, 2, 17, 0, 0, 0, time.Now().Location())
+	resp, err := client.Music.GetSongsByProgramID(context.Background(), &SongsOptions{
 		ChannelID: &ID,
 		StartDate: &start,
 		EndDate:   &end,
@@ -71,16 +65,10 @@ func TestGetSongsByProgramID(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetCurrentlyPlayingSongs(), got error: %v", err)
+		t.Errorf("Error occurred in GetSongsByProgramID(), got error: %v", err)
 	}
 
-	for _, song := range songs {
-		fmt.Println(song.Title)
-	}
-
-	t.Errorf("test..")
-
-	//	assert.Equal(t, , "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
+	assert.Equal(t, 8, len(resp.Songs), "There should be 8 songs in the episode during the specified time")
 }
 
 func TestGetSongsByEpisodeID(t *testing.T) {
@@ -88,8 +76,8 @@ func TestGetSongsByEpisodeID(t *testing.T) {
 
 	ID := 422962
 	start := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
-	end := time.Date(2017, 5, 1, 1, 0, 0, 0, time.Now().Location())
-	songs, err := client.Music.GetSongsByEpisodeID(context.Background(), &SongsOptions{
+	end := time.Date(2017, 1, 1, 0, 0, 0, 0, time.Now().Location())
+	resp, err := client.Music.GetSongsByEpisodeID(context.Background(), &SongsOptions{
 		ChannelID: &ID,
 		StartDate: &start,
 		EndDate:   &end,
@@ -98,14 +86,8 @@ func TestGetSongsByEpisodeID(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Errorf("Error occurred in GetCurrentlyPlayingSongs(), got error: %v", err)
+		t.Errorf("Error occurred in GetSongsByEpisodeID(), got error: %v", err)
 	}
 
-	for _, song := range songs {
-		fmt.Println(song.Title)
-	}
-
-	t.Errorf("test..")
-
-	//	assert.Equal(t, , "Karlavagnen", "Podfile with ID 4126279 should be from program Karlavagnen")
+	assert.Equal(t, 7, len(resp.Songs), "There should be 7 songs in the episode")
 }
